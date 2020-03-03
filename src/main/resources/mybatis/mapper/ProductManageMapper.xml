@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="main.java.com.po.dao.ProductManageMapper" >
+    <resultMap id="BaseResultMap" type="main.java.com.po.entity.ProductManageEntity" >
+        <result column="id" property="id" javaType="string" jdbcType="VARCHAR" />
+        <result column="model_no" property="modelNo" javaType="string" jdbcType="VARCHAR"/>
+        <result column="product_no" property="productNo" javaType="string" jdbcType="VARCHAR"/>
+        <result column="product_name" property="productName" javaType="string" jdbcType="VARCHAR"/>
+        <result column="product_decribe" property="productDecribe" javaType="string" jdbcType="VARCHAR"/>
+        <result column="quality_standard" property="qualityStandard" javaType="string" jdbcType="VARCHAR" />
+        <result column="number" property="number" javaType="string" jdbcType="VARCHAR" />
+        <result column="hold_number" property="holdNumber" javaType="string" jdbcType="VARCHAR" />
+        <result column="unit_price" property="unitPrice" javaType="string" jdbcType="VARCHAR" />
+        <result column="tax_rate" property="taxRate" javaType="string" jdbcType="VARCHAR" />
+        <result column="tax_amount" property="taxAmount" javaType="string" jdbcType="VARCHAR" />
+        <result column="remarks" property="remarks" javaType="string" jdbcType="VARCHAR" />
+        <result column="create_user" property="createUser" javaType="string" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" javaType="string" jdbcType="VARCHAR"/>
+        <result column="arrival_date" property="arrivalDate" javaType="string" jdbcType="VARCHAR"/>
+        <result column="update_time" property="updateTime" javaType="string" jdbcType="VARCHAR"/>
+    </resultMap>
+    
+    <sql id="Base_Column_List" >
+        id,model_no,product_no,product_name,product_decribe,quality_standard,number,hold_number,unit_price,tax_rate,tax_amount,remarks,create_user,create_time,arrival_date,update_time
+    </sql>
+    
+    <select id="queryProductDatas" resultMap="BaseResultMap" parameterType="java.lang.String" >
+       SELECT 
+       <include refid="Base_Column_List" />
+	   FROM product_manage
+	   order by create_time desc
+	   <if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+	   </if>
+    </select>
+    
+    <select id="queryTotal" resultType="int">
+		select count(*) from product_manage
+	</select>
+    
+    <!-- 通过产品型号查询相关信息 -->
+    <select id="queryProductInfo" resultMap="BaseResultMap" parameterType="java.lang.String" >
+       SELECT 
+       <include refid="Base_Column_List" />
+	   FROM product_manage where product_no = #{productNo,jdbcType=VARCHAR}
+    </select>
+
+	<!-- 添加产品信息 -->
+	<insert id="insert" parameterType="main.java.com.po.entity.ProductManageEntity">
+		INSERT into product_manage(model_no,product_no,product_name,product_decribe,quality_standard,number,hold_number,unit_price,tax_rate,tax_amount,remarks,create_user,arrival_date)
+		VALUES(#{modelNo},#{productNo},#{productName},#{productDecribe},#{qualityStandard},#{number},#{holdNumber},#{unitPrice},#{taxRate},#{taxAmount},#{remarks},#{createUser},#{arrivalDate})
+	</insert>
+    
+	<!-- 修改产品信息信息 -->
+	<update id="update" parameterType="main.java.com.po.entity.ProductManageEntity" >
+      	update product_manage 
+		<set> 
+			<if test="modelNo != null">model_no = #{modelNo}, </if>
+			<if test="productName != null">product_name = #{productName}, </if>
+			<if test="productDecribe != null">product_decribe = #{productDecribe}, </if>
+			<if test="qualityStandard != null">quality_standard = #{qualityStandard}, </if>
+			<if test="number != null">number = #{number}, </if>
+			<if test="holdNumber != null">hold_number = #{holdNumber}, </if>
+			<if test="unitPrice != null">unit_price = #{unitPrice}, </if>
+			<if test="taxRate != null">tax_rate = #{taxRate}, </if>
+			<if test="taxAmount != null">tax_amount = #{taxAmount}, </if>
+			<if test="remarks != null">remarks = #{remarks}, </if>
+			<if test="createUser != null">create_user = #{createUser}, </if>
+			<if test="arrivalDate != null">arrival_date = #{arrivalDate}, </if>
+			<if test="remarks != null">remarks = #{remarks}, </if>
+		</set>
+		where product_no = #{productNo,jdbcType=VARCHAR}
+    </update>
+    
+    <delete id="delete" parameterType="java.lang.String" >
+		delete from product_manage where product_no = #{productNo,jdbcType=VARCHAR}
+    </delete>
+    
+</mapper>

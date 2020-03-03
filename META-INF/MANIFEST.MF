@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: jx_manage
+Bundle-SymbolicName: jx_manage
+Bundle-Version: 1.0.0.qualifier
+Export-Package: main.java,
+ main.resources

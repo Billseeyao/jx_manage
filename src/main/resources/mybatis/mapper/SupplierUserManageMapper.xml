@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="main.java.com.po.dao.SupplierUserManageMapper" >
+    <resultMap id="BaseResultMap" type="main.java.com.po.entity.SupplierUserManageEntity" >
+      	<result column="id" property="id" javaType="string" jdbcType="VARCHAR" />
+        <result column="manage_no" property="manageNo" javaType="string" jdbcType="VARCHAR" />
+        <result column="user_name" property="userName" javaType="string" jdbcType="VARCHAR"/>
+        <result column="tel_no" property="telNo" javaType="string" jdbcType="VARCHAR"/>
+        <result column="phone_no" property="phoneNo" javaType="string" jdbcType="VARCHAR"/>
+        <result column="email" property="email" javaType="string" jdbcType="VARCHAR" />
+        <result column="fax" property="fax" javaType="string" jdbcType="VARCHAR" />
+        <result column="address" property="address" javaType="string" jdbcType="VARCHAR" />
+        <result column="postcode" property="postCode" javaType="string" jdbcType="VARCHAR" />
+        <result column="create_user" property="createUser" javaType="string" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" javaType="string" jdbcType="VARCHAR"/>
+    </resultMap>
+    
+    <sql id="Base_Column_List" >
+       id,manage_no,user_name,tel_no,phone_no,email,fax,address,postcode,create_user,create_time
+    </sql>
+
+    <select id="queryObject" resultMap="BaseResultMap" parameterType="java.lang.String" >
+       SELECT 
+       <include refid="Base_Column_List" />
+	   FROM supplier_user_manage 
+	   order by create_time desc
+	   <if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+	   </if>
+    </select>
+    
+    <select id="queryTotal" resultType="int">
+		select count(*) from supplier_user_manage
+	</select>
+    
+    <!-- 通过供应商编号查询联系人信息 -->
+    <select id="querySupplierUserInfo" resultMap="BaseResultMap" parameterType="java.lang.String" >
+       SELECT 
+       <include refid="Base_Column_List" />
+	   FROM supplier_user_manage where id = #{id,jdbcType=VARCHAR}
+    </select>
+
+	<!-- 添加供应商信息联系人 -->
+	<insert id="insert" parameterType="main.java.com.po.entity.SupplierUserManageEntity">
+		INSERT into supplier_user_manage
+			(manage_no,user_name,tel_no,phone_no,email,fax,address,postcode,create_user)
+		VALUES
+			(#{manageNo},#{userName},#{telNo},#{phoneNo},#{email},#{fax},#{address},#{postCode},#{createUser})
+	</insert>
+    
+	<!-- 修改供应商信息 -->
+    <update id="update" parameterType="main.java.com.po.entity.SupplierUserManageEntity" >
+      	update supplier_user_manage 
+		<set> 
+			<if test="manageNo != null">manage_no = #{manageNo}, </if>
+			<if test="userName != null">user_name = #{userName}, </if>
+			<if test="telNo != null">tel_no = #{telNo}, </if>
+			<if test="phoneNo != null">phone_no = #{phoneNo}, </if>
+			<if test="email != null">email = #{email}, </if>
+			<if test="fax != null">fax = #{fax}, </if>
+			<if test="address != null">address = #{address}, </if>
+			<if test="postCode != null">postcode = #{postCode},</if>
+			<if test="createUser != null">create_user = #{createUser},</if>
+			<if test="createTime != null">create_time = #{createTime}</if>
+		</set>
+		where id = #{id,jdbcType=VARCHAR}
+    </update>
+    
+	<delete id="delete" parameterType="java.lang.String" >
+		delete from supplier_user_manage where id = #{id,jdbcType=VARCHAR}
+    </delete>
+    
+</mapper>

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="main.java.com.po.dao.OrderManageMapper" >
+    <resultMap id="BaseResultMap" type="main.java.com.po.entity.OrderManageEntity" >
+        <result column="id" property="id" javaType="string" jdbcType="VARCHAR" />
+        <result column="order_no" property="orederNo" javaType="string" jdbcType="VARCHAR"/>
+        <result column="product_no" property="productNo" javaType="string" jdbcType="VARCHAR"/>
+        <result column="approver" property="approver" javaType="string" jdbcType="VARCHAR"/>
+        <result column="order_day" property="orderDay" javaType="string" jdbcType="VARCHAR" />
+        <result column="arrival_date" property="arrivalDate" javaType="string" jdbcType="VARCHAR"/>
+        <result column="supplier_no" property="supplierNo" javaType="string" jdbcType="VARCHAR" />
+        <result column="invoice_id" property="invoiceId" javaType="string" jdbcType="VARCHAR" />
+        <result column="unit_price" property="unitPrice" javaType="string" jdbcType="VARCHAR" />
+        <result column="amount" property="amount" javaType="string" jdbcType="VARCHAR" />
+        <result column="tax_rate" property="taxRate" javaType="string" jdbcType="VARCHAR" />
+        <result column="tax_amount" property="taxAmount" javaType="string" jdbcType="VARCHAR"/>
+        <result column="total_sum" property="totalSum" javaType="string" jdbcType="VARCHAR"/>
+        <result column="status" property="status" javaType="string" jdbcType="VARCHAR"/>
+        <result column="order_remarks" property="orderRemarks" javaType="string" jdbcType="VARCHAR"/>
+        <result column="shipping_info" property="shippingInfo" javaType="string" jdbcType="VARCHAR"/>
+        <result column="create_user" property="createUser" javaType="string" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" javaType="string" jdbcType="VARCHAR"/>
+        <result column="update_time" property="updateTime" javaType="string" jdbcType="VARCHAR"/>
+        <result column="cancel_reason" property="cancelReason" javaType="string" jdbcType="VARCHAR"/>
+        <result column="address" property="address" javaType="string" jdbcType="VARCHAR"/>
+        <result column="name" property="name" javaType="string" jdbcType="VARCHAR"/>
+        <result column="phone_no" property="phoneNo" javaType="string" jdbcType="VARCHAR"/>
+        <result column="tel_no" property="telNo" javaType="string" jdbcType="VARCHAR"/>
+        <result column="email" property="email" javaType="string" jdbcType="VARCHAR"/>
+    </resultMap>
+    
+    <sql id="Base_Column_List" >
+        id,order_no,product_no,approver,order_day,supplier_no,invoice_id,unit_price,amount,tax_rate,tax_amount,total_sum,status,order_remarks,shipping_info,create_user,create_time,update_time,cancel_reason,
+        address,name,phone_no,tel_no,email,arrival_date
+    </sql>
+
+	<!-- 查询订单列表 -->
+    <select id="queryObject" resultMap="BaseResultMap"  >
+       SELECT 
+       <include refid="Base_Column_List" />
+	   FROM order_manager
+	   order by create_time desc
+	   <if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+	   </if>
+    </select>
+    
+	<select id="queryTotal" resultType="int">
+		select count(*) from order_manager
+	</select>
+     
+    <!-- 通过订单号查询订单信息 -->
+    <select id="queryDataByNo" resultMap="BaseResultMap" parameterType="java.lang.String" >
+       SELECT 
+       <include refid="Base_Column_List" />
+	   FROM order_manager where order_no = #{orederNo,jdbcType=VARCHAR}
+    </select> 
+
+	<!-- 创建订单 -->
+	<insert id="insert" parameterType="main.java.com.po.entity.OrderManageEntity">
+		INSERT into order_manager(order_no,product_no,approver,order_day,supplier_no,invoice_id,unit_price,amount,tax_rate,tax_amount,total_sum,status,order_remarks,shipping_info,create_user,
+			address,name,phone_no,tel_no,email,arrival_date)
+		VALUES(#{orederNo},#{productNo},#{approver},#{orderDay},#{supplierNo},#{invoiceId},#{unitPrice},#{amount},#{taxRate},#{taxAmount},#{totalSum},#{status},#{orderRemarks},#{shippingInfo},#{createUser},
+			#{address},#{name},#{phoneNo},#{telNo},#{email},#{arrivalDate})
+	</insert>
+    
+	<!-- 修改订单信息 -->
+    <update id="update" parameterType="main.java.com.po.entity.OrderManageEntity" >
+      	update order_manager 
+		<set> 
+			<if test="orederNo != null">order_no = #{orederNo}, </if>
+			<if test="productNo != null">product_no = #{approver}, </if>
+			<if test="approver != null">approver = #{applyRemarks}, </if>
+			<if test="orderDay != null">order_day = #{orderDay}, </if>
+			<if test="supplierNo != null">supplier_no = #{supplierNo}, </if>
+			<if test="invoiceId != null">invoice_id = #{invoiceId}</if>
+			<if test="unitPrice != null">unit_price = #{unitPrice}, </if>
+			<if test="amount != null">amount = #{amount}, </if>
+			<if test="taxRate != null">tax_rate = #{taxRate}, </if>
+			<if test="taxAmount != null">tax_amount = #{taxAmount}, </if>
+			<if test="totalSum != null">total_sum = #{totalSum}, </if>
+			<if test="status != null">status = #{status}, </if>
+			<if test="orderRemarks != null">order_remarks = #{orderRemarks}, </if>
+			<if test="shippingInfo != null">shipping_info = #{shippingInfo}, </if>
+			<if test="createUser != null">create_user = #{createUser}, </if>
+			<if test="updateTime != null">update_time = #{updateTime}, </if>
+			<if test="address != null">address = #{address}, </if>
+			<if test="name != null">name = #{name}, </if>
+			<if test="phoneNo != null">phone_no = #{phoneNo}, </if>
+			<if test="telNo != null">tel_no = #{telNo}, </if>
+			<if test="email != null">email = #{email} </if>
+			<if test="arrivalDate != null">arrival_date = #{arrivalDate}</if>
+		</set>
+		where order_no = #{orederNo,jdbcType=VARCHAR}
+    </update>
+    
+    <delete id="delete" parameterType="java.lang.String" >
+		delete from order_manager where id = #{id,jdbcType=VARCHAR}
+    </delete>
+    
+   <!-- 查询状态正常的产品号、订单号 -->
+   <select id="queryNomal" resultMap="BaseResultMap"  >
+       SELECT 
+       <include refid="Base_Column_List" />
+	   FROM order_manager
+	   where status <![CDATA[ <> ]]> '0'
+	   order by create_time desc
+    </select>
+    
+    <!-- 查询异常订单 -->
+   <select id="queryAbnomal" resultMap="BaseResultMap"  parameterType="main.java.com.po.entity.OrderManageEntity">	   
+	   select order_no,product_no,order_remarks,supplier_no,supplier_name,s.email as email 
+	   from order_manager o LEFT JOIN supplier_user_manage s 
+	   on o.supplier_no = s.manage_no and o.supplier_name = s.user_name 
+	   where status = '2'
+	   <if test="email != null"> and s.email = #{email}</if>
+    </select>
+   
+</mapper>

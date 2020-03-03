@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="main.java.com.po.dao.OrderApplyMapper" >
+    <resultMap id="BaseResultMap" type="main.java.com.po.entity.OrderApplyEntity" >
+        <result column="id" property="id" javaType="string" jdbcType="VARCHAR" />
+        <result column="oreder_no" property="orederNo" javaType="string" jdbcType="VARCHAR"/>
+        <result column="apply_no" property="applyNo" javaType="string" jdbcType="VARCHAR"/>
+        <result column="apply_user" property="applyUser" javaType="string" jdbcType="VARCHAR"/>
+        <result column="apply_time" property="applyTime" javaType="string" jdbcType="VARCHAR" />
+        <result column="apply_remarks" property="applyRemarks" javaType="string" jdbcType="VARCHAR" />
+        <result column="approve_user" property="approveUser" javaType="string" jdbcType="VARCHAR" />
+        <result column="approve_time" property="approveTime" javaType="string" jdbcType="VARCHAR" />
+        <result column="approve_remarks" property="approveRemarks" javaType="string" jdbcType="VARCHAR" />
+        <result column="create_user" property="createUser" javaType="string" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" javaType="string" jdbcType="VARCHAR"/>
+    </resultMap>
+    
+    <sql id="Base_Column_List" >
+        id,oreder_no,apply_no,apply_user,apply_time,apply_remarks,approve_user,approve_time,approve_remarks,create_user,create_time
+    </sql>
+
+    <select id="queryObject" resultMap="BaseResultMap"  >
+       SELECT 
+       <include refid="Base_Column_List" />
+	   FROM order_apply 
+    </select>
+    
+    <!-- 通过订单号查询申请相关信息 -->
+    <select id="queryOrderApplyInfo" resultMap="BaseResultMap" parameterType="java.lang.String" >
+       SELECT 
+       <include refid="Base_Column_List" />
+	   FROM order_apply where oreder_no = #{orederNo,jdbcType=VARCHAR}
+    </select>
+
+	<!-- 添加开票信息 -->
+	<insert id="insert" parameterType="main.java.com.po.entity.OrderApplyEntity">
+		INSERT into order_apply(oreder_no, apply_no,apply_user,apply_remarks,approve_user,approve_remarks,create_user)
+		VALUES(#{orederNo},#{applyNo},#{applyUser},#{applyRemarks},#{approveUser},#{approveRemarks},#{createUser})
+	</insert>
+    
+	<!-- 保存审核信息 -->
+    <update id="update" parameterType="main.java.com.po.entity.OrderApplyEntity" >
+      	update order_apply 
+		<set> 
+			<if test="orederNo != null">oreder_no = #{orederNo}, </if>
+			<if test="applyUser != null">apply_user = #{applyUser}, </if>
+			<if test="applyRemarks != null">apply_remarks = #{applyRemarks}, </if>
+			<if test="approveUser != null">approve_user = #{approveUser}, </if>
+			<if test="approveRemarks != null">approve_remarks = #{approveRemarks}, </if>
+			<if test="createUser != null">create_user = #{createUser}, </if>
+		</set>
+		where apply_no = #{applyNo,jdbcType=VARCHAR}
+    </update>
+    
+    <delete id="delete" parameterType="java.lang.String" >
+		delete from order_apply where id = #{id,jdbcType=VARCHAR}
+    </delete>
+    
+</mapper>

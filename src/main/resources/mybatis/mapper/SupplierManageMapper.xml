@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="main.java.com.po.dao.SupplierManageMapper" >
+    <resultMap id="BaseResultMap" type="main.java.com.po.entity.SupplierManageEntity" >
+        <result column="id" property="id" javaType="string" jdbcType="VARCHAR" />
+        <result column="manage_no" property="manageNo" javaType="string" jdbcType="VARCHAR"/>
+        <result column="manage_name" property="manageName" javaType="string" jdbcType="VARCHAR"/>
+        <result column="address" property="address" javaType="string" jdbcType="VARCHAR"/>
+        <result column="company_tel" property="companyTel" javaType="string" jdbcType="VARCHAR"/>
+        <result column="opening_bank" property="openingBank" javaType="string" jdbcType="VARCHAR" />
+        <result column="account_no" property="accountNo" javaType="string" jdbcType="VARCHAR" />
+        <result column="pay_term" property="payTerm" javaType="string" jdbcType="VARCHAR" />
+        <result column="currency" property="currenCy" javaType="string" jdbcType="VARCHAR" />
+       	<result column="invoice_name" property="invoiceName" javaType="string" jdbcType="VARCHAR" />
+       	<result column="invoice_no" property="invoiceNo" javaType="string" jdbcType="VARCHAR" />
+		<result column="ivoice_address" property="ivoiceAddress" javaType="string" jdbcType="VARCHAR" />
+        <result column="invoice_phoneno" property="invoicePhoneNo" javaType="string" jdbcType="VARCHAR" />
+        <result column="invoice_bank" property="invoiceBank" javaType="string" jdbcType="VARCHAR" />
+        <result column="invoice_accountno" property="invoiceAccountNo" javaType="string" jdbcType="VARCHAR" />
+        <result column="create_user" property="createUser" javaType="string" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" javaType="string" jdbcType="VARCHAR"/>
+    </resultMap>
+    
+    <sql id="Base_Column_List" >
+       id,manage_no,manage_name,address,company_tel,opening_bank,account_no,pay_term,currency,invoice_name,invoice_no,ivoice_address,invoice_phoneno,invoice_bank,invoice_accountno,create_user,create_time
+    </sql>
+
+    <select id="queryObject" resultMap="BaseResultMap"  >
+       SELECT 
+       <include refid="Base_Column_List" />
+	   FROM supplier_manage 
+	   order by create_time desc
+	   <if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+	   </if>
+    </select>
+    
+    <select id="queryTotal" resultType="int">
+		select count(*) from supplier_manage
+    </select>
+    
+    <!-- 通过供应商编号查询供应商信息 -->
+    <select id="querySupplierInfo" resultMap="BaseResultMap" parameterType="java.lang.String" >
+       SELECT 
+       <include refid="Base_Column_List" />
+	   FROM supplier_manage where manage_no = #{manageNo,jdbcType=VARCHAR}
+    </select>
+
+	<!-- 添加供应商信息 -->
+	<insert id="insert" parameterType="main.java.com.po.entity.SupplierManageEntity">
+		INSERT into supplier_manage
+			(manage_no,manage_name,address,company_tel,opening_bank,account_no,pay_term,currency,invoice_name,invoice_no,ivoice_address,invoice_phoneno,invoice_bank,invoice_accountno,create_user)
+		VALUES
+			(#{manageNo},#{manageName},#{address},#{companyTel},#{openingBank},#{accountNo},#{payTerm},#{currenCy},#{invoiceName},#{invoiceNo},#{ivoiceAddress},#{invoicePhoneNo},#{invoiceBank},#{invoiceAccountNo},#{createUser})
+	</insert>
+    
+	<!-- 修改供应商信息 -->
+    <update id="update" parameterType="main.java.com.po.entity.SupplierManageEntity" >
+      	update supplier_manage 
+		<set> 
+			<if test="manageName != null">manage_name = #{manageName}, </if>
+			<if test="address != null">address = #{address}, </if>
+			<if test="companyTel != null">company_tel = #{companyTel}, </if>
+			<if test="openingBank != null">opening_bank = #{openingBank}, </if>
+			<if test="accountNo != null">account_no = #{accountNo}, </if>
+			<if test="payTerm != null">pay_term = #{payTerm}, </if>
+			<if test="currenCy != null">currency = #{currenCy}, </if>
+			<if test="invoiceName != null">invoice_name = #{invoiceName},</if>
+			<if test="invoiceNo != null">invoice_no = #{invoiceNo},</if>
+			<if test="ivoiceAddress != null">ivoice_address = #{ivoiceAddress},</if>
+			<if test="invoicePhoneNo != null">invoice_phoneno = #{invoicePhoneNo},</if>
+			<if test="invoiceName != null">invoice_name = #{invoiceName},</if>
+			<if test="invoiceBank != null">invoice_bank = #{invoiceBank},</if>
+			<if test="invoiceAccountNo != null">invoice_accountno = #{invoiceAccountNo},</if>
+			<if test="createUser != null">create_user = #{createUser},</if>
+			<if test="createTime != null">create_time = #{createTime}</if>
+		</set>
+		where manage_no = #{manageNo,jdbcType=VARCHAR}
+    </update>
+    
+	<delete id="delete" parameterType="java.lang.String" >
+		delete from supplier_manage where manage_no = #{manageNo,jdbcType=VARCHAR}
+    </delete>
+    
+</mapper>

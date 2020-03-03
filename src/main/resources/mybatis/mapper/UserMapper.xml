@@ -21,6 +21,13 @@
        SELECT 
        <include refid="Base_Column_List" />
 	   FROM user where state = '1'
+	   <if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+	   </if>
+    </select>
+    
+    <select id="queryTotal" resultType="int">
+		select count(*) from supplier_manage
     </select>
     
     <select id="isExistUser" resultType="java.lang.String" parameterType="main.java.com.po.entity.UserEntity" >

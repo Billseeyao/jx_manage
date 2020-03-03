@@ -89,8 +89,13 @@ public class LoginController {
 	 */
 	@RequestMapping(value = "/getUser",method = RequestMethod.POST)
 	public ReMessage getUser(){
-		String user = session.getAttribute("currentUser").toString();
-		return ReMessage.ok(user);
+		try {
+			String user = session.getAttribute("currentUser").toString();
+			return ReMessage.ok(user);
+		} catch (Exception e){
+			logger.error("获取当前用户失败["+e.getMessage()+"]");
+			return ReMessage.error(500,"获取当前用户失败...");
+		}
 	}
 	 
 }

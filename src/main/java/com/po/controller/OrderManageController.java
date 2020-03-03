@@ -1,5 +1,6 @@
 package main.java.com.po.controller;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,7 +50,7 @@ public class OrderManageController {
 	 * @return
 	 */
 	@RequestMapping(value="/save", method = RequestMethod.POST)
-	public ReMessage save(OrderManageEntity entity,HttpServletRequest request){
+	public ReMessage save(HttpServletRequest request){
 		
 		try {
 			String orderNo = request.getParameter("orderNo"); //订单号
@@ -58,18 +59,18 @@ public class OrderManageController {
 			String orderDay = request.getParameter("orderDay"); //订单日期
 			String supplierNo = request.getParameter("supplierNo"); //供应商编号
 			String unitPrice = request.getParameter("unitPrice"); //单价(不含税)
-			String amount = request.getParameter("amount"); //金额
-			String taxRate = request.getParameter("taxRate"); //税率
-			String taxAmount = request.getParameter("taxAmount"); //税额
-			String totalSum = request.getParameter("totalSum"); //价税总额
-			String status = request.getParameter("status"); //订单状态1正常0关闭2异常订单
+			BigDecimal amount = new BigDecimal(request.getParameter("amount")); //金额
+			BigDecimal taxRate = new BigDecimal(request.getParameter("taxRate")); //税率
+			BigDecimal taxAmount = new BigDecimal(request.getParameter("taxAmount")); //税额
+			BigDecimal totalSum = new BigDecimal(request.getParameter("totalSum")); //价税总额
+			String status = "1";
 			String orderRemarks = request.getParameter("orderRemarks"); //订单备注
 			String shippingInfo = request.getParameter("shippingInfo"); //送货须知
 //			String createUser = session.getAttribute("currentUser").toString(); //创建人
 			String createUser = null;
 			
-//			OrderManageEntity entity = new OrderManageEntity(orderNo,productNo,approver,orderDay,supplierNo,
-//					unitPrice,amount,taxRate,taxAmount,totalSum,status,orderRemarks,shippingInfo,createUser);
+			OrderManageEntity entity = new OrderManageEntity(orderNo,productNo,approver,orderDay,supplierNo,
+					unitPrice,amount,taxRate,taxAmount,totalSum,status,orderRemarks,shippingInfo,createUser);
 
 			orderManageMapper.insert(entity);
 			
@@ -93,18 +94,18 @@ public class OrderManageController {
 			String approver = request.getParameter("approver"); //批准人
 			String orderDay = request.getParameter("orderDay"); //订单日期
 			String supplierNo = request.getParameter("supplierNo"); //供应商编号
+			BigDecimal amount = new BigDecimal(request.getParameter("amount")); //金额
+			BigDecimal taxRate = new BigDecimal(request.getParameter("taxRate")); //税率
+			BigDecimal taxAmount = new BigDecimal(request.getParameter("taxAmount")); //税额
+			BigDecimal totalSum = new BigDecimal(request.getParameter("totalSum")); //价税总额
 			String unitPrice = request.getParameter("unitPrice"); //单价(不含税)
-			String amount = request.getParameter("amount"); //金额
-			String taxRate = request.getParameter("taxRate"); //税率
-			String taxAmount = request.getParameter("taxAmount"); //税额
-			String totalSum = request.getParameter("totalSum"); //价税总额
-			String status = request.getParameter("status"); //订单状态1正常0未到货未逾期2数量不足未逾期3逾期订单
+			String status = null; //订单状态1正常0未到货未逾期2数量不足未逾期3逾期订单
 			String orderRemarks = request.getParameter("orderRemarks"); //订单备注
 			String shippingInfo = request.getParameter("shippingInfo"); //送货须知
-			String createUser = session.getAttribute("currentUser").toString(); //创建人
+//			String createUser = session.getAttribute("currentUser").toString(); //创建人
 			
 			OrderManageEntity entity = new OrderManageEntity(orderNo,productNo,approver,orderDay,supplierNo,
-					unitPrice,amount,taxRate,taxAmount,totalSum,status,orderRemarks,shippingInfo,createUser);
+					unitPrice,amount,taxRate,taxAmount,totalSum,status,orderRemarks,shippingInfo,null);
 
 			orderManageMapper.update(entity);
 			return ReMessage.ok("保存成功");
@@ -146,7 +147,7 @@ public class OrderManageController {
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping(value="/query", method = RequestMethod.GET)
+	@RequestMapping(value="/query", method = RequestMethod.POST)
 	public ReMessage queryDatas(Integer page, Integer limit){
 
 		try {

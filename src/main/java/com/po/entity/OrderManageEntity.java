@@ -1,5 +1,7 @@
 package main.java.com.po.entity;
 
+import java.math.BigDecimal;
+
 public class OrderManageEntity {
 	
 	private String id;
@@ -10,10 +12,10 @@ public class OrderManageEntity {
 	private String supplierNo;
 	private String invoiceId;
 	private String unitPrice;
-	private String amount;
-	private String taxRate;
-	private String taxAmount;
-	private String totalSum;
+	private BigDecimal amount;
+	private BigDecimal taxRate;
+	private BigDecimal taxAmount;
+	private BigDecimal totalSum;
 	private String status;
 	private String orderRemarks;
 	private String shippingInfo;
@@ -34,8 +36,8 @@ public class OrderManageEntity {
 	
 	public OrderManageEntity(String orederNo, String productNo,
 			String approver, String orderDay, String supplierNo,
-			String unitPrice, String amount, String taxRate, String taxAmount,
-			String totalSum, String status, String orderRemarks,
+			String unitPrice, BigDecimal amount, BigDecimal taxRate, BigDecimal taxAmount,
+			BigDecimal totalSum, String status, String orderRemarks,
 			String shippingInfo, String createUser) {
 		super();
 		this.orederNo = orederNo;
@@ -103,30 +105,39 @@ public class OrderManageEntity {
 	public void setUnitPrice(String unitPrice) {
 		this.unitPrice = unitPrice;
 	}
-	public String getAmount() {
+
+	public BigDecimal getAmount() {
 		return amount;
 	}
-	public void setAmount(String amount) {
+
+	public void setAmount(BigDecimal amount) {
 		this.amount = amount;
 	}
-	public String getTaxRate() {
+
+	public BigDecimal getTaxRate() {
 		return taxRate;
 	}
-	public void setTaxRate(String taxRate) {
+
+	public void setTaxRate(BigDecimal taxRate) {
 		this.taxRate = taxRate;
 	}
-	public String getTaxAmount() {
+
+	public BigDecimal getTaxAmount() {
 		return taxAmount;
 	}
-	public void setTaxAmount(String taxAmount) {
+
+	public void setTaxAmount(BigDecimal taxAmount) {
 		this.taxAmount = taxAmount;
 	}
-	public String getTotalSum() {
+
+	public BigDecimal getTotalSum() {
 		return totalSum;
 	}
-	public void setTotalSum(String totalSum) {
+
+	public void setTotalSum(BigDecimal totalSum) {
 		this.totalSum = totalSum;
 	}
+
 	public String getStatus() {
 		return status;
 	}

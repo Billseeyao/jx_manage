@@ -11,10 +11,10 @@
         <result column="supplier_no" property="supplierNo" javaType="string" jdbcType="VARCHAR" />
         <result column="invoice_id" property="invoiceId" javaType="string" jdbcType="VARCHAR" />
         <result column="unit_price" property="unitPrice" javaType="string" jdbcType="VARCHAR" />
-        <result column="amount" property="amount" javaType="string" jdbcType="VARCHAR" />
-        <result column="tax_rate" property="taxRate" javaType="string" jdbcType="VARCHAR" />
-        <result column="tax_amount" property="taxAmount" javaType="string" jdbcType="VARCHAR"/>
-        <result column="total_sum" property="totalSum" javaType="string" jdbcType="VARCHAR"/>
+        <result column="amount" property="amount" javaType="BigDecimal" jdbcType="DECIMAL" />
+        <result column="tax_rate" property="taxRate" javaType="BigDecimal" jdbcType="DECIMAL" />
+        <result column="tax_amount" property="taxAmount" javaType="BigDecimal" jdbcType="DECIMAL"/>
+        <result column="total_sum" property="totalSum" javaType="BigDecimal" jdbcType="DECIMAL"/>
         <result column="status" property="status" javaType="string" jdbcType="VARCHAR"/>
         <result column="order_remarks" property="orderRemarks" javaType="string" jdbcType="VARCHAR"/>
         <result column="shipping_info" property="shippingInfo" javaType="string" jdbcType="VARCHAR"/>
@@ -60,7 +60,7 @@
 	<insert id="insert" parameterType="main.java.com.po.entity.OrderManageEntity">
 		INSERT into order_manager(order_no,product_no,approver,order_day,supplier_no,invoice_id,unit_price,amount,tax_rate,tax_amount,total_sum,status,order_remarks,shipping_info,create_user,
 			address,name,phone_no,tel_no,email,arrival_date)
-		VALUES(#{orederNo},#{productNo},#{approver},#{orderDay},#{supplierNo},#{invoiceId},#{unitPrice},#{amount},#{taxRate},#{taxAmount},#{totalSum},#{status},#{orderRemarks},#{shippingInfo},#{createUser},
+		VALUES(#{orederNo},#{productNo},#{approver},#{orderDay},#{supplierNo},#{invoiceId},#{unitPrice},#{amount},#{taxRate,jdbcType=VARCHAR},#{taxAmount},#{totalSum},#{status},#{orderRemarks},#{shippingInfo},#{createUser},
 			#{address},#{name},#{phoneNo},#{telNo},#{email},#{arrivalDate})
 	</insert>
     
@@ -69,8 +69,8 @@
       	update order_manager 
 		<set> 
 			<if test="orederNo != null">order_no = #{orederNo}, </if>
-			<if test="productNo != null">product_no = #{approver}, </if>
-			<if test="approver != null">approver = #{applyRemarks}, </if>
+			<if test="productNo != null">product_no = #{productNo}, </if>
+			<if test="approver != null">approver = #{approver}, </if>
 			<if test="orderDay != null">order_day = #{orderDay}, </if>
 			<if test="supplierNo != null">supplier_no = #{supplierNo}, </if>
 			<if test="invoiceId != null">invoice_id = #{invoiceId}</if>
@@ -90,6 +90,7 @@
 			<if test="telNo != null">tel_no = #{telNo}, </if>
 			<if test="email != null">email = #{email} </if>
 			<if test="arrivalDate != null">arrival_date = #{arrivalDate}</if>
+			<if test="cancelReason != null">cancel_reason = #{cancelReason}</if>
 		</set>
 		where order_no = #{orederNo,jdbcType=VARCHAR}
     </update>

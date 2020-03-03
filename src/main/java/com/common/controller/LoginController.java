@@ -7,18 +7,22 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import main.java.com.po.dao.UserMapper;
-import main.java.com.po.entity.User;
 import main.java.com.po.entity.UserEntity;
 import main.java.com.utils.ReMessage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+
+/**
+ * 用户登录controller
+ * @author ylyao
+ *
+ */
 @RestController
 @RequestMapping(value="/user")
 public class LoginController {
@@ -39,10 +43,8 @@ public class LoginController {
 	 * @param request
 	 * @param httpSession
 	 */
-//	@RequestMapping(value="/login",method = RequestMethod.POST)
-//	public ReMessage loginIn(HttpServletRequest request){
-	@PostMapping(value="/login")
-	public ReMessage loginIn(User user,HttpServletRequest request){
+	@RequestMapping(value="/login",method = RequestMethod.POST)
+	public ReMessage loginIn(HttpServletRequest request){
 		
 		Map<String,Object> map = new HashMap<String ,Object>();
 		try {
@@ -75,35 +77,20 @@ public class LoginController {
 	 * @return
 	 */
 	@RequestMapping(value = "/logout",method = RequestMethod.POST)
-	public ReMessage logout(HttpSession session){
-		testSession();
-		
-		session.invalidate();//使Session变成无效，及用户退出
+	public ReMessage logout(HttpServletRequest request){
+		session.removeAttribute(request.getParameter("userName"));//使Session变成无效，及用户退出
 		return ReMessage.ok();
 	}
 
-
-	
-	public void testSession(){
-		System.out.println(">>>>>>" + session.getAttribute("currentUser").toString());
+	/**
+	 * 登录后获取用户名
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = "/getUser",method = RequestMethod.POST)
+	public ReMessage getUser(){
+		String user = session.getAttribute("currentUser").toString();
+		return ReMessage.ok(user);
 	}
-	
-	  @RequestMapping(value = "/test",method = RequestMethod.GET)
-	  public String login(HttpServletRequest request){
-		  String account = request.getParameter("account");
-	        String password = request.getParameter("password");
-	        if ("123".equals(account) && "123456".equals(password)){
-	            /*如果已经存在Session的话，直接返回它；没有就创建一个，再返回
-	             * 当然Session是自动放在responss中的Header中的，这里不用做其他处理*/
-	        	request.getSession();
-	        	request.getSession().setAttribute("user", account);
-	            
-	        }else {
-	            return "failed";
-	        }
-	        return "success";
-	  }
-	  
-	
 	 
 }

@@ -1,6 +1,8 @@
 package main.java.com.common.controller;
 
-import javax.mail.Session;
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -13,7 +15,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,13 +24,15 @@ import org.springframework.web.bind.annotation.RestController;
 public class LoginController {
 	private Logger logger = LoggerFactory.getLogger(LoginController.class);
 	
-	private UserEntity user = new UserEntity();
+	@Autowired
+	private HttpSession session;
+	
+	@Autowired
+	private UserMapper userMapper;
 	
 	private String loginUser = "";
 	private String pwd = "";
 	
-	@Autowired
-	private UserMapper userMapper;
 
 	/**
 	 * 用户登陆
@@ -40,23 +43,30 @@ public class LoginController {
 //	public ReMessage loginIn(HttpServletRequest request){
 	@PostMapping(value="/login")
 	public ReMessage loginIn(User user,HttpServletRequest request){
-		loginUser = request.getParameter("userName");
-		pwd = request.getParameter("passWord");
 		
-		UserEntity entity = new UserEntity();
-		entity.setName(loginUser);
-		entity.setPassWord(pwd);
-		String flag = userMapper.isExistUser(entity);
-		
-		//判断是否登陆成功
-		if("1".equals(flag)){
-			request.getSession().setAttribute("currentUser", loginUser); //其他要用到的地方使用 注入HttpSession session即可			
-			//
-			return ReMessage.ok();
-		} else {
-			//提示登陆失败
-			return ReMessage.error(500, "用户名或密码错误，请重试...");
+		Map<String,Object> map = new HashMap<String ,Object>();
+		try {
+			loginUser = request.getParameter("userName");
+			pwd = request.getParameter("passWord");
+			
+			UserEntity entity = new UserEntity();
+			entity.setName(loginUser);
+			entity.setPassWord(pwd);
+			String flag = userMapper.isExistUser(entity);
+			
+			if("1".equals(flag)){
+				request.getSession().setAttribute("currentUser", loginUser); //其他要用到的地方使用 注入HttpSession session即可			
+				map.put("user", loginUser);
+				return ReMessage.ok(map);
+			} else {
+				//提示登陆失败
+				return ReMessage.error(500, "用户名或密码错误，请重试...");
+			}
+		} catch (Exception e){
+			logger.error("登录异常["+ e.getMessage() +"]，请重试...");
+			return ReMessage.error(500, "登录异常，请重试...");
 		}
+		
 	}
 	
 	/**
@@ -72,8 +82,7 @@ public class LoginController {
 		return ReMessage.ok();
 	}
 
-	@Autowired
-	private HttpSession session;
+
 	
 	public void testSession(){
 		System.out.println(">>>>>>" + session.getAttribute("currentUser").toString());

@@ -76,14 +76,20 @@ public class SupplierManageController {
 	public ReMessage queryList(Integer page, Integer limit){
 		try {
 			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("offset", (page - 1) * limit);
-			map.put("limit", limit);
+			if(page != null && limit != null){
+				map.put("offset", (page - 1) * limit);
+				map.put("limit", limit);
+			}
 			
 			List<SupplierManageEntity> orderDatas = supplierManageMapper.queryObject(map);
 			int total = supplierManageMapper.queryTotal();
-			PageUtils pageUtil = new PageUtils(orderDatas, total, limit, page);
+			if(page != null && limit != null){
+				PageUtils pageUtil = new PageUtils(orderDatas, total, limit, page);
+				return ReMessage.ok().put("page", pageUtil);
+			} else {
+				return ReMessage.ok().put("data", orderDatas);
+			}
 			
-			return ReMessage.ok().put("page", pageUtil);
 		} catch (Exception e) {
 			logger.error("查询供应商列表异常：" + e.getMessage());
 			return ReMessage.error(500, "查询供应商列表异常：" + e.getMessage());

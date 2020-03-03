@@ -1,6 +1,8 @@
 package main.java.com.po.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -15,7 +17,9 @@ public class UserImpl implements UserService{
 
 	@Override
 	public List<UserEntity> getUser() {
-		return userMapper.getUserObject();
+//		Map<String,Object> map = new HashMap<String, Object>();
+//		return userMapper.getUserObject(map);
+		return null;
 	}
 
 }

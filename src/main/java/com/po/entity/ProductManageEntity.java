@@ -25,7 +25,7 @@ public class ProductManageEntity {
 	
 	public ProductManageEntity(String modelNo, String productNo,
 			String productName, String productDecribe, String qualityStandard,
-			String unitPrice, String taxRate, String remarks) {
+			String unitPrice, String taxRate, String remarks,String arrivalDate) {
 		super();
 		this.modelNo = modelNo;
 		this.productNo = productNo;
@@ -35,12 +35,13 @@ public class ProductManageEntity {
 		this.unitPrice = unitPrice;
 		this.taxRate = taxRate;
 		this.remarks = remarks;
+		this.arrivalDate = arrivalDate;
 	}
 	
 	public ProductManageEntity(String modelNo, String productNo,
 			String productName, String productDecribe, String qualityStandard,
 			String unitPrice, String taxRate, String remarks,
-			String createUser) {
+			String createUser,String arrivalDate) {
 		super();
 		this.modelNo = modelNo;
 		this.productNo = productNo;
@@ -51,6 +52,7 @@ public class ProductManageEntity {
 		this.taxRate = taxRate;
 		this.remarks = remarks;
 		this.createUser = createUser;
+		this.arrivalDate = arrivalDate;
 	}
 	
 	

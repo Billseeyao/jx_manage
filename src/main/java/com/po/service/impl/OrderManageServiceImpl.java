@@ -8,6 +8,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import main.java.com.po.dao.InvoiceManageMapper;
@@ -48,6 +49,10 @@ public class OrderManageServiceImpl implements OrderManageService{
 	@Autowired
 	private SupplierUserManageMapper supplierUserManageMapper;
 	
+	@Value("${jx.invoiceId}")
+	private String invoiceId;
+	
+	
 	private String arrivalDate = "";
 
 	//订单预览
@@ -61,9 +66,7 @@ public class OrderManageServiceImpl implements OrderManageService{
 			OrderManageEntity entity = orderManageMapper.queryDataByNo(orderNo);
 			String productNo = entity.getProductNo();//获取产品编号
 			String supplierNo = entity.getSupplierNo();// 获取供应商编号
-			String invoiceId = entity.getInvoiceId();// 开票编号
-			
-			
+//			String invoiceId = entity.getInvoiceId();// 开票编号
 			
 			//查询订单相关信息
 			dataMap.put("orderInfoData",orderData(orderNo));

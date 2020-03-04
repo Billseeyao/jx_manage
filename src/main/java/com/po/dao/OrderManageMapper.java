@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 
 import main.java.com.po.entity.OrderManageEntity;
+import main.java.com.po.entity.SearchEntity;
 
 /**
  * 发票管理
@@ -55,4 +56,11 @@ public interface OrderManageMapper {
 	 * @return
 	 */
 	List<OrderManageEntity> queryAbnomal(OrderManageEntity entity);
+	
+	/**
+	 * 根据条件查询订单
+	 * @param entity
+	 * @return
+	 */
+	List<OrderManageEntity> searchOrders(SearchEntity entity);
 }

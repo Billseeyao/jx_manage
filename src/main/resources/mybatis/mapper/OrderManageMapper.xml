@@ -39,6 +39,20 @@
        SELECT 
        <include refid="Base_Column_List" />
 	   FROM order_manager
+	   where status <![CDATA[ <> ]]> '0'
+	   order by create_time desc
+	   <if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+	   </if>
+    </select>
+    
+    <!-- 条件查询订单列表 -->
+    <select id="searchOrders" resultMap="BaseResultMap" parameterType="main.java.com.po.entity.SearchEntity" >
+       SELECT
+       <include refid="Base_Column_List" />
+	   FROM order_manager
+	   where status <![CDATA[ <> ]]> '0'
+	   <if test="orederNo != null"> and order_no = #{orederNo} </if>
 	   order by create_time desc
 	   <if test="offset != null and limit != null">
 			limit #{offset}, #{limit}
@@ -46,7 +60,7 @@
     </select>
     
 	<select id="queryTotal" resultType="int">
-		select count(*) from order_manager
+		select count(*) from order_manager where status <![CDATA[ <> ]]> '0'
 	</select>
      
     <!-- 通过订单号查询订单信息 -->

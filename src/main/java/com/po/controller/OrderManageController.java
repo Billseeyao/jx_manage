@@ -10,6 +10,7 @@ import javax.servlet.http.HttpSession;
 
 import main.java.com.po.dao.OrderManageMapper;
 import main.java.com.po.entity.OrderManageEntity;
+import main.java.com.po.entity.SearchEntity;
 import main.java.com.po.service.OrderManageService;
 import main.java.com.utils.PageUtils;
 import main.java.com.utils.ReMessage;
@@ -59,10 +60,10 @@ public class OrderManageController {
 			String orderDay = request.getParameter("orderDay"); //订单日期
 			String supplierNo = request.getParameter("supplierNo"); //供应商编号
 			String unitPrice = request.getParameter("unitPrice"); //单价(不含税)
-			BigDecimal amount = new BigDecimal(request.getParameter("amount")); //金额
-			BigDecimal taxRate = new BigDecimal(request.getParameter("taxRate")); //税率
-			BigDecimal taxAmount = new BigDecimal(request.getParameter("taxAmount")); //税额
-			BigDecimal totalSum = new BigDecimal(request.getParameter("totalSum")); //价税总额
+			BigDecimal amount = new BigDecimal(request.getParameter("amount") == null ? null : request.getParameter("amount")); //金额
+			BigDecimal taxRate = new BigDecimal(request.getParameter("taxRate") == null ? null :request.getParameter("taxRate")); //税率
+			BigDecimal taxAmount = new BigDecimal(request.getParameter("taxAmount") == null ? null : request.getParameter("taxAmount")); //税额
+			BigDecimal totalSum = new BigDecimal(request.getParameter("totalSum") == null ? null:request.getParameter("totalSum")); //价税总额
 			String status = "1";
 			String orderRemarks = request.getParameter("orderRemarks"); //订单备注
 			String shippingInfo = request.getParameter("shippingInfo"); //送货须知
@@ -124,13 +125,14 @@ public class OrderManageController {
 	@RequestMapping(value="/close", method = RequestMethod.POST)
 	public ReMessage close(HttpServletRequest request){
 		try {
-			String orderNo = request.getParameter("orderNo"); //订单号
+			String orderNo = request.getParameter("orederNo"); //订单号
 			String cancelReason = request.getParameter("reason"); //取消原因
 			if(StringFunctionUtil.isEmpty(cancelReason)) return ReMessage.error(500, "关闭原因不能为空！");
 			
 			OrderManageEntity entity = new OrderManageEntity();
 			entity.setOrederNo(orderNo);
 			entity.setCancelReason(cancelReason); 
+			entity.setStatus("0");
 			entity.setUpdateTime(StringFunctionUtil.getNowTime());
 
 			orderManageMapper.update(entity);
@@ -156,6 +158,36 @@ public class OrderManageController {
 			map.put("limit", limit);
 			
 			List<OrderManageEntity> orderDatas = orderManageMapper.queryObject(map);
+			int total = orderManageMapper.queryTotal();
+			PageUtils pageUtil = new PageUtils(orderDatas, total, limit, page);
+			
+			return ReMessage.ok().put("page", pageUtil);
+		} catch (Exception e) {
+			logger.error("查询订单列表异常：" + e.getMessage());
+			return ReMessage.error(500, "查询订单列表异常：" + e.getMessage());
+		}
+	}
+	
+	/**
+	 * 查询订单列表
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value="/searchOrders", method = RequestMethod.POST)
+	public ReMessage searchOrders(HttpServletRequest request){
+
+		try {
+			int page = Integer.parseInt(request.getParameter("page"));
+			int limit = Integer.parseInt(request.getParameter("limit"));
+			String orderNo = request.getParameter("orderNo");
+			int offset = (page - 1) * limit;
+			
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("offset", (page - 1) * limit);
+			map.put("limit", limit);
+			
+			SearchEntity entity = new SearchEntity(offset,limit,orderNo);
+			List<OrderManageEntity> orderDatas = orderManageMapper.searchOrders(entity);
 			int total = orderManageMapper.queryTotal();
 			PageUtils pageUtil = new PageUtils(orderDatas, total, limit, page);
 			

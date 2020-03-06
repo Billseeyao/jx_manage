@@ -11,10 +11,13 @@
         <result column="update_time" property="updateTime" javaType="string" jdbcType="VARCHAR"/>
         <result column="state" property="state" javaType="string" jdbcType="VARCHAR"/>
         <result column="flag" property="flag" javaType="string" jdbcType="VARCHAR"/>
+        <result column="phone_no" property="phoneNo" javaType="string" jdbcType="VARCHAR"/>
+        <result column="tel_no" property="telNo" javaType="string" jdbcType="VARCHAR"/>
+        <result column="remark" property="remark" javaType="string" jdbcType="VARCHAR"/>
     </resultMap>
     
     <sql id="Base_Column_List" >
-        id, name, password, email, type, create_time, update_time, state
+        id, name, password, email, type, create_time, update_time, state, phone_no,tel_no,remark
     </sql>
 
     <select id="getUserObject" resultMap="BaseResultMap"  >
@@ -26,8 +29,19 @@
 	   </if>
     </select>
     
+     <select id="getUser" resultMap="BaseResultMap"  parameterType="java.lang.Long">
+       SELECT 
+       <include refid="Base_Column_List" />
+	   FROM user where id = #{id}
+    </select>
+    
+   <select id="isExist" resultType="int"  >
+       SELECT count(*)
+	   FROM user where state = '1' and name = #{name,jdbcType=VARCHAR}
+    </select>
+    
     <select id="queryTotal" resultType="int">
-		select count(*) from supplier_manage
+		select count(*) from user where state = '1'
     </select>
     
     <select id="isExistUser" resultType="java.lang.String" parameterType="main.java.com.po.entity.UserEntity" >
@@ -39,44 +53,35 @@
     <insert id="insert" parameterType="main.java.com.po.entity.UserEntity" >
        INSERT INTO 
        		user
-       		(name, password, email, type, state) 
+       		(name, password, email, type, state, phone_no, tel_no, remark) 
        	VALUES
-       		(#{name}, #{passWord}, #{email}, #{type}, #{state})
+       		(#{name}, #{passWord}, #{email}, #{type}, #{state},#{phoneNo},#{telNo},#{remark})
     </insert>
     
-    
-<!-- 
-    <select id="getOne" parameterType="java.lang.Long" resultMap="BaseResultMap" >
-        SELECT 
-       <include refid="Base_Column_List" />
-	   FROM users
-	   WHERE id = #{id}
-    </select>
-
-    <insert id="insert" parameterType="com.neo.model.User" >
-       INSERT INTO 
-       		users
-       		(userName,passWord,user_sex) 
-       	VALUES
-       		(#{userName}, #{passWord}, #{userSex})
-    </insert>
-    
-    <update id="update" parameterType="com.neo.model.User" >
+    <update id="update" parameterType="main.java.com.po.entity.UserEntity" >
        UPDATE 
-       		users 
-       SET 
-       	<if test="userName != null">userName = #{userName},</if>
-       	<if test="passWord != null">passWord = #{passWord},</if>
-       	nick_name = #{nickName}
-       WHERE 
+       		USER
+       <set>  
+       	<if test="name != null">name = #{name},</if>
+       	<if test="passWord != null">password = #{passWord},</if>
+       	<if test="email != null">email = #{email},</if>
+       	<if test="type != null">type = #{type},</if>
+       	<if test="createTime != null">create_time = #{createTime},</if>
+       	<if test="updateTime != null">update_time = #{updateTime},</if>
+		<if test="state != null">state = #{state},</if>
+       	<if test="phoneNo != null">phone_no = #{phoneNo},</if>
+       	<if test="telNo != null">tel_no = #{telNo},</if>
+		<if test="remark != null">remark = #{remark}</if>
+       </set>
+       WHERE
        		id = #{id}
     </update>
     
     <delete id="delete" parameterType="java.lang.Long" >
        DELETE FROM
-       		 users 
+       		 user
        WHERE 
        		 id =#{id}
     </delete>
- -->
+    
 </mapper>

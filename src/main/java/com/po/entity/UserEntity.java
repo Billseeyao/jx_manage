@@ -15,6 +15,10 @@ public class UserEntity implements Serializable {
 	private String updateTime;
 	private String state;
 	private String flag;
+	private String phoneNo;
+	private String telNo;
+	private String remark;
+	
 	
 
 	public Long getId() {
@@ -84,6 +88,30 @@ public class UserEntity implements Serializable {
 				+ passWord + ", email=" + email + ", nickName="
 				+ ", type=" + type + ", createTime=" + createTime
 				+ ", updateTime=" + updateTime + ", state=" + state + "]";
+	}
+
+	public String getPhoneNo() {
+		return phoneNo;
+	}
+
+	public void setPhoneNo(String phoneNo) {
+		this.phoneNo = phoneNo;
+	}
+
+	public String getTelNo() {
+		return telNo;
+	}
+
+	public void setTelNo(String telNo) {
+		this.telNo = telNo;
+	}
+
+	public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
 	}
 
 	

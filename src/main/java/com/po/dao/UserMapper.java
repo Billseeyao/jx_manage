@@ -17,4 +17,13 @@ public interface UserMapper {
 	String isExistUser(UserEntity user);
 	
 	void insert(UserEntity user);
+	
+	void update(UserEntity entity);
+	
+	void delete(Long id);
+	
+	int isExist(String name);
+	
+	UserEntity getUser(Long id);
+
 }

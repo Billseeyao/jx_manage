@@ -18,6 +18,8 @@ public interface OrderManageMapper {
 	
 	List<OrderManageEntity> queryObject(Map<String, Object> map);
 	
+	List<OrderManageEntity> queryObjectNew(Map<String, Object> map);
+	
 	/**
 	 * 通过订单号查询订单详情
 	 * @param orederNo
@@ -45,6 +47,8 @@ public interface OrderManageMapper {
 	
 	int queryTotal();
 	
+	int queryTotalNew();
+	
 	/**
 	 * 查询状态正常的产品号、订单号 
 	 * @return
@@ -63,4 +67,11 @@ public interface OrderManageMapper {
 	 * @return
 	 */
 	List<OrderManageEntity> searchOrders(SearchEntity entity);
+	
+	/**
+	 * 预览查询订单信息
+	 * @param entity
+	 * @return
+	 */
+	OrderManageEntity proviewDataByNo(OrderManageEntity entity);
 }

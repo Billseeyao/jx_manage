@@ -5,42 +5,62 @@
         <result column="id" property="id" javaType="string" jdbcType="VARCHAR" />
         <result column="order_no" property="orederNo" javaType="string" jdbcType="VARCHAR"/>
         <result column="product_no" property="productNo" javaType="string" jdbcType="VARCHAR"/>
+        <result column="product_name" property="productName" javaType="string" jdbcType="VARCHAR"/>
         <result column="approver" property="approver" javaType="string" jdbcType="VARCHAR"/>
         <result column="order_day" property="orderDay" javaType="string" jdbcType="VARCHAR" />
-        <result column="arrival_date" property="arrivalDate" javaType="string" jdbcType="VARCHAR"/>
         <result column="supplier_no" property="supplierNo" javaType="string" jdbcType="VARCHAR" />
-        <result column="invoice_id" property="invoiceId" javaType="string" jdbcType="VARCHAR" />
+        <result column="supplier_name" property="supplierName" javaType="string" jdbcType="VARCHAR" />
+        <result column="supplier_user" property="supplierUser" javaType="string" jdbcType="VARCHAR" />
         <result column="unit_price" property="unitPrice" javaType="string" jdbcType="VARCHAR" />
-        <result column="amount" property="amount" javaType="BigDecimal" jdbcType="DECIMAL" />
         <result column="tax_rate" property="taxRate" javaType="BigDecimal" jdbcType="DECIMAL" />
+        <result column="amount" property="amount" javaType="BigDecimal" jdbcType="DECIMAL" />
+        <result column="number" property="number" javaType="string" jdbcType="VARCHAR" />
+        <result column="hold_number" property="holdNumber" javaType="string" jdbcType="VARCHAR" />
         <result column="tax_amount" property="taxAmount" javaType="BigDecimal" jdbcType="DECIMAL"/>
         <result column="total_sum" property="totalSum" javaType="BigDecimal" jdbcType="DECIMAL"/>
         <result column="status" property="status" javaType="string" jdbcType="VARCHAR"/>
         <result column="order_remarks" property="orderRemarks" javaType="string" jdbcType="VARCHAR"/>
         <result column="shipping_info" property="shippingInfo" javaType="string" jdbcType="VARCHAR"/>
-        <result column="create_user" property="createUser" javaType="string" jdbcType="VARCHAR"/>
-        <result column="create_time" property="createTime" javaType="string" jdbcType="VARCHAR"/>
-        <result column="update_time" property="updateTime" javaType="string" jdbcType="VARCHAR"/>
-        <result column="cancel_reason" property="cancelReason" javaType="string" jdbcType="VARCHAR"/>
         <result column="address" property="address" javaType="string" jdbcType="VARCHAR"/>
         <result column="name" property="name" javaType="string" jdbcType="VARCHAR"/>
         <result column="phone_no" property="phoneNo" javaType="string" jdbcType="VARCHAR"/>
         <result column="tel_no" property="telNo" javaType="string" jdbcType="VARCHAR"/>
         <result column="email" property="email" javaType="string" jdbcType="VARCHAR"/>
+        <result column="create_user" property="createUser" javaType="string" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" javaType="string" jdbcType="VARCHAR"/>
+        <result column="cancel_reason" property="cancelReason" javaType="string" jdbcType="VARCHAR"/>
+        <result column="invoice_id" property="invoiceId" javaType="string" jdbcType="VARCHAR" />
+        <result column="update_time" property="updateTime" javaType="string" jdbcType="VARCHAR"/>
+        <result column="arrival_date" property="arrivalDate" javaType="string" jdbcType="VARCHAR"/>
     </resultMap>
     
     <sql id="Base_Column_List" >
-        id,order_no,product_no,approver,order_day,supplier_no,invoice_id,unit_price,amount,tax_rate,tax_amount,total_sum,status,order_remarks,shipping_info,create_user,create_time,update_time,cancel_reason,
-        address,name,phone_no,tel_no,email,arrival_date
+		id,order_no,product_no,product_name,approver,order_day,supplier_no,supplier_name,supplier_user,
+		unit_price,tax_rate,amount,tax_amount,total_sum,status,order_remarks,shipping_info,address,name,
+		phone_no,tel_no,email,create_user,create_time,update_time,cancel_reason,invoice_id,arrival_date
     </sql>
 
+	<!-- 查询订单列表 -->
+    <select id="queryObjectNew" resultMap="BaseResultMap"  >
+       SELECT order_no,GROUP_CONCAT(product_no) as product_no,order_day,GROUP_CONCAT(STATUS) as STATUS,approver,create_time
+	   FROM order_manager
+	   where status <![CDATA[ <> ]]> '0'
+	   GROUP BY order_no order by create_time desc
+	   <if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+	   </if>
+    </select>
+    <select id="queryTotalNew" resultType="int">
+		select count(*) from order_manager where status <![CDATA[ <> ]]> '0'  GROUP BY order_no
+	</select>
+    
 	<!-- 查询订单列表 -->
     <select id="queryObject" resultMap="BaseResultMap"  >
        SELECT 
        <include refid="Base_Column_List" />
 	   FROM order_manager
 	   where status <![CDATA[ <> ]]> '0'
-	   order by create_time desc
+	   GROUP BY order_no order by create_time desc
 	   <if test="offset != null and limit != null">
 			limit #{offset}, #{limit}
 	   </if>
@@ -67,15 +87,27 @@
     <select id="queryDataByNo" resultMap="BaseResultMap" parameterType="java.lang.String" >
        SELECT 
        <include refid="Base_Column_List" />
-	   FROM order_manager where order_no = #{orederNo,jdbcType=VARCHAR}
+	   FROM order_manager where order_no = #{orederNo,jdbcType=VARCHAR} limit 1
+    </select> 
+    
+  	<!-- 通过订单号查询订单信息 -->
+    <select id="proviewDataByNo" resultMap="BaseResultMap" parameterType="main.java.com.po.entity.OrderManageEntity" >
+       SELECT 
+       <include refid="Base_Column_List" />
+	   FROM order_manager 
+	   where order_no = #{orederNo,jdbcType=VARCHAR} and product_no =#{productNo,jdbcType=VARCHAR}
+	   and supplier_no = #{supplierNo}
     </select> 
 
 	<!-- 创建订单 -->
 	<insert id="insert" parameterType="main.java.com.po.entity.OrderManageEntity">
-		INSERT into order_manager(order_no,product_no,approver,order_day,supplier_no,invoice_id,unit_price,amount,tax_rate,tax_amount,total_sum,status,order_remarks,shipping_info,create_user,
-			address,name,phone_no,tel_no,email,arrival_date)
-		VALUES(#{orederNo},#{productNo},#{approver},#{orderDay},#{supplierNo},#{invoiceId},#{unitPrice},#{amount},#{taxRate,jdbcType=VARCHAR},#{taxAmount},#{totalSum},#{status},#{orderRemarks},#{shippingInfo},#{createUser},
-			#{address},#{name},#{phoneNo},#{telNo},#{email},#{arrivalDate})
+		INSERT into order_manager(order_no,product_no,product_name,approver,order_day,supplier_no,supplier_name,supplier_user,
+		unit_price,tax_rate,amount,tax_amount,total_sum,status,order_remarks,shipping_info,address,name,
+		phone_no,tel_no,email,create_user,create_time,invoice_id,arrival_date)
+		
+		VALUES(#{orederNo},#{productNo},#{productName},#{approver},#{orderDay},#{supplierNo},#{supplierName},#{supplierUser},
+		#{unitPrice},#{taxRate},#{amount},#{taxAmount},#{totalSum},#{status},#{orderRemarks},#{shippingInfo},#{address},#{name},
+		#{phoneNo},#{telNo},#{email},#{createUser},#{createTime},#{invoiceId},#{arrivalDate})
 	</insert>
     
 	<!-- 修改订单信息 -->
@@ -87,6 +119,7 @@
 			<if test="approver != null">approver = #{approver}, </if>
 			<if test="orderDay != null">order_day = #{orderDay}, </if>
 			<if test="supplierNo != null">supplier_no = #{supplierNo}, </if>
+			<if test="supplierName != null">supplier_name = #{supplierName}, </if>
 			<if test="invoiceId != null">invoice_id = #{invoiceId}</if>
 			<if test="unitPrice != null">unit_price = #{unitPrice}, </if>
 			<if test="amount != null">amount = #{amount}, </if>

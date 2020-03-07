@@ -8,15 +8,15 @@ public class ProductManageEntity {
 	private String productName;
 	private String productDecribe;
 	private String qualityStandard;
-	private String number;
-	private String holdNumber;
+//	private String number;
+//	private String holdNumber;
 	private String unitPrice;
 	private String taxRate;
 	private String taxAmount;//税额
 	private String remarks;
 	private String createUser;
 	private String createTime;
-	private String arrivalDate;
+//	private String arrivalDate;
 	private String updateTime;
 	
 	public ProductManageEntity(){
@@ -25,7 +25,7 @@ public class ProductManageEntity {
 	
 	public ProductManageEntity(String modelNo, String productNo,
 			String productName, String productDecribe, String qualityStandard,
-			String unitPrice, String taxRate, String remarks,String arrivalDate) {
+			String unitPrice, String taxRate, String remarks) {
 		super();
 		this.modelNo = modelNo;
 		this.productNo = productNo;
@@ -35,13 +35,13 @@ public class ProductManageEntity {
 		this.unitPrice = unitPrice;
 		this.taxRate = taxRate;
 		this.remarks = remarks;
-		this.arrivalDate = arrivalDate;
+//		this.arrivalDate = arrivalDate;
 	}
 	
 	public ProductManageEntity(String modelNo, String productNo,
 			String productName, String productDecribe, String qualityStandard,
 			String unitPrice, String taxRate, String remarks,
-			String createUser,String arrivalDate) {
+			String createUser) {
 		super();
 		this.modelNo = modelNo;
 		this.productNo = productNo;
@@ -52,7 +52,7 @@ public class ProductManageEntity {
 		this.taxRate = taxRate;
 		this.remarks = remarks;
 		this.createUser = createUser;
-		this.arrivalDate = arrivalDate;
+//		this.arrivalDate = arrivalDate;
 	}
 	
 	
@@ -92,18 +92,18 @@ public class ProductManageEntity {
 	public void setQualityStandard(String qualityStandard) {
 		this.qualityStandard = qualityStandard;
 	}
-	public String getNumber() {
-		return number;
-	}
-	public void setNumber(String number) {
-		this.number = number;
-	}
-	public String getHoldNumber() {
-		return holdNumber;
-	}
-	public void setHoldNumber(String holdNumber) {
-		this.holdNumber = holdNumber;
-	}
+//	public String getNumber() {
+//		return number;
+//	}
+//	public void setNumber(String number) {
+//		this.number = number;
+//	}
+//	public String getHoldNumber() {
+//		return holdNumber;
+//	}
+//	public void setHoldNumber(String holdNumber) {
+//		this.holdNumber = holdNumber;
+//	}
 	public String getUnitPrice() {
 		return unitPrice;
 	}
@@ -142,12 +142,12 @@ public class ProductManageEntity {
 		this.createTime = createTime;
 	}
 	
-	public String getArrivalDate() {
-		return arrivalDate;
-	}
-	public void setArrivalDate(String arrivalDate) {
-		this.arrivalDate = arrivalDate;
-	}
+//	public String getArrivalDate() {
+//		return arrivalDate;
+//	}
+//	public void setArrivalDate(String arrivalDate) {
+//		this.arrivalDate = arrivalDate;
+//	}
 	
 	public String getUpdateTime() {
 		return updateTime;
@@ -158,19 +158,15 @@ public class ProductManageEntity {
 		this.updateTime = updateTime;
 	}
 
-
 	@Override
 	public String toString() {
 		return "ProductManageEntity [id=" + id + ", modelNo=" + modelNo
-				+ ", productName=" + productName + ", productDecribe="
-				+ productDecribe + ", qualityStandard=" + qualityStandard
-				+ ", number=" + number + ", holdNumber=" + holdNumber
-				+ ", unitPrice=" + unitPrice + ", taxRate=" + taxRate
-				+ ", remarks=" + remarks + ", createUser=" + createUser
-				+ ", createTime=" + createTime + "]";
+				+ ", productNo=" + productNo + ", productName=" + productName
+				+ ", productDecribe=" + productDecribe + ", qualityStandard="
+				+ qualityStandard + ", unitPrice=" + unitPrice + ", taxRate="
+				+ taxRate + ", taxAmount=" + taxAmount + ", remarks=" + remarks
+				+ ", createUser=" + createUser + ", createTime=" + createTime
+				+ ", updateTime=" + updateTime + "]";
 	}
-	
-	
-	
-	
+
 }

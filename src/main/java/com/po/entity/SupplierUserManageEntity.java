@@ -20,6 +20,12 @@ public class SupplierUserManageEntity {
 	}
 	
 	
+	public SupplierUserManageEntity(String manageNo,String userName) {
+		super();
+		this.manageNo = manageNo;
+		this.userName = userName;
+	}
+	
 	public SupplierUserManageEntity(String id, String manageNo,
 			String userName, String telNo, String phoneNo, String email,
 			String fax, String address, String postCode, String createUser,

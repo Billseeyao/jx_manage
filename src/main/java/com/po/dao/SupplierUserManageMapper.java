@@ -27,7 +27,7 @@ public interface SupplierUserManageMapper {
 	 * @param manageNo
 	 * @return
 	 */
-	SupplierUserManageEntity querySupplierUserInfo(String id);
+	SupplierUserManageEntity querySupplierUserInfo(String supplierNo, String supplierUser);
 	
 	/**
 	 * 保存供应商信息
@@ -43,5 +43,12 @@ public interface SupplierUserManageMapper {
 	
 	
 	void delete(String id);
+	
+	/**
+	 * 预览查看供应商联系人信息
+	 * @param entity
+	 * @return
+	 */
+	SupplierUserManageEntity previewSupplierUserInfo(SupplierUserManageEntity entity);
 	
 }

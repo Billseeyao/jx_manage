@@ -1,14 +1,11 @@
 package main.java.com.po.service.impl;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import main.java.com.po.dao.InvoiceManageMapper;
@@ -48,41 +45,30 @@ public class OrderManageServiceImpl implements OrderManageService{
 	
 	@Autowired
 	private SupplierUserManageMapper supplierUserManageMapper;
-	
-	@Value("${jx.invoiceId}")
-	private String invoiceId;
-	
-	
-	private String arrivalDate = "";
 
 	//订单预览
 	@Override
 	public Map<String, Object> previewData(String orderNo) {
 		
 		Map<String, Object> dataMap = new HashMap<String, Object>();
-		List<Map<String, String>> productDatas = new ArrayList<Map<String,String>>();
 		
 //		try {
 			OrderManageEntity entity = orderManageMapper.queryDataByNo(orderNo);
 			String productNo = entity.getProductNo();//获取产品编号
 			String supplierNo = entity.getSupplierNo();// 获取供应商编号
-//			String invoiceId = entity.getInvoiceId();// 开票编号
+			String invoiceId = entity.getInvoiceId();// 开票编号
+			String supplierUser = entity.getSupplierUser();
 			
 			//查询订单相关信息
 			dataMap.put("orderInfoData",orderData(orderNo));
-			//查询关联的产品信息
-			String[] num = productNo.split(",");
-			for(int i = 0,length = num.length; i < length; i++){
-				productDatas.add(productInfo(num[i]));
-			}
-			dataMap.put("productDatas", productDatas);
-			
+			//查询订单中相关的产品信息
+			dataMap.put("productDatas", productInfo(productNo, orderNo ,supplierNo));
 			//查询对应开票信息
 			dataMap.put("invoiceData", invoiceInfo(invoiceId));
 			//查询供应商付款信息
 			dataMap.put("supplierData", supplierInfo(supplierNo));
-			//查询所在供应商联系人
-			dataMap.put("supplierUserData", supplierUserInfo(supplierNo));
+			//查询所在供应商联系人信息
+			dataMap.put("supplierUserData", supplierUserInfo(supplierNo, supplierUser));
 			
 //		} catch (Exception e){
 //			logger.error("" + e.getMessage());
@@ -95,33 +81,42 @@ public class OrderManageServiceImpl implements OrderManageService{
 	
 	
 	/**
-	 * 根据产品编号查询关联的产品信息
-	 * 注意：订单的到货日期放在产品表里（订单表中存在一个订单多个产品的关系，订单中的每个产品到货日期可能不同，所以暂时到货日期放在产品表里。）
+	 * 根据产品编号查询此订单中关联的产品信息
 	 * @param orderNo
 	 * @return
 	 */
-	public Map<String,String> productInfo(String productNo){
+	public Map<String,Object> productInfo(String productNo,String orderNo, String supplierNo){
 		
-		Map<String,String> map = new HashMap<String, String>();
+		Map<String,Object> map = new HashMap<String, Object>();
 		try {
 			ProductManageEntity entity = productMapper.queryProductInfo(productNo);
 			if(!StringFunctionUtil.isEmpty(entity)){
 //				map.put("modelNo", entity.getModelNo());
-				map.put("productName", entity.getProductName()); //产品名称
+//				map.put("productName", entity.getProductName()); //产品名称
 				map.put("productDecribe", entity.getProductDecribe());//产品描述
 //				map.put("qualityStandard", entity.getQualityStandard());//
-				map.put("number", entity.getNumber()); //数量
+//				map.put("number", entity.getNumber()); //数量
 //				map.put("holdNumber", entity.getHoldNumber());
-				map.put("unitPrice", entity.getUnitPrice());//单价不含税
-				map.put("taxRate", entity.getTaxRate());//税率
-				map.put("taxAmount",entity.getTaxAmount());//税额
-				map.put("arrivalDate",entity.getArrivalDate());//到货日期
-				
+//				map.put("unitPrice", entity.getUnitPrice());//单价不含税
+//				map.put("taxRate", entity.getTaxRate());//税率
+//				map.put("taxAmount",entity.getTaxAmount());//税额
+//				map.put("arrivalDate",entity.getArrivalDate());//到货日期
 				map.put("remarks", entity.getRemarks());//备注
 			}
 			
+			OrderManageEntity orderEntity = orderManageMapper.proviewDataByNo(new OrderManageEntity(orderNo,productNo,supplierNo));
+			if(!StringFunctionUtil.isEmpty(orderEntity)){
+				map.put("number", orderEntity.getNumber());//起订数量
+				map.put("holdNumber", orderEntity.getHoldNumber());//起订数量
+				map.put("unitPrice",orderEntity.getUnitPrice()); //单价
+				map.put("taxRate",orderEntity.getTaxRate()); //税率
+				map.put("taxAmount",orderEntity.getTaxAmount()); //税额
+				map.put("arrivalDate",orderEntity.getArrivalDate()); //到货日期
+				map.put("amount",orderEntity.getAmount());  //金额
+			}
+			
 		}catch(Exception e){
-			logger.error("通过供应商编号查询对应开票信息异常：" + e.getMessage());
+			logger.error("产品编号查询关联的产品信息异常：" + e.getMessage());
 		}
 		return map;
 	}
@@ -156,11 +151,12 @@ public class OrderManageServiceImpl implements OrderManageService{
 	 * @param supplierNo
 	 * @return
 	 */
-	public Map<String,String> supplierUserInfo(String supplierNo){
+	public Map<String,String> supplierUserInfo(String supplierNo,String supplierUser){
 		
 		Map<String,String> map = new HashMap<String, String>();
 		try {
-			SupplierUserManageEntity entity = supplierUserManageMapper.querySupplierUserInfo(supplierNo);
+			
+			SupplierUserManageEntity entity = supplierUserManageMapper.previewSupplierUserInfo(new SupplierUserManageEntity(supplierNo, supplierUser));
 			if(!StringFunctionUtil.isEmpty(entity)){
 				map.put("name", entity.getUserName());// 联系人姓名
 				map.put("telNo",entity.getTelNo());//联系人电话
@@ -170,7 +166,7 @@ public class OrderManageServiceImpl implements OrderManageService{
 			}
 
 		}catch(Exception e){
-			logger.error("通过供应商编号查询对应开票信息异常：" + e.getMessage());
+			logger.error("预览查询供应商联系人信息异常：" + e.getMessage());
 		}
 		return map;
 	}

@@ -7,33 +7,103 @@ public class OrderManageEntity {
 	private String id;
 	private String orederNo;
 	private String productNo;
+	private String productName;
 	private String approver;
 	private String orderDay;
 	private String supplierNo;
-	private String invoiceId;
+	private String supplierName;
+	private String supplierUser;
 	private String unitPrice;
-	private BigDecimal amount;
 	private BigDecimal taxRate;
+	private BigDecimal amount;
+	private String number;
+	private String holdNumber;
 	private BigDecimal taxAmount;
 	private BigDecimal totalSum;
 	private String status;
 	private String orderRemarks;
 	private String shippingInfo;
-	private String createUser;
-	private String createTime;
-	private String updateTime;
-	private String cancelReason;
 	private String address;
 	private String name;
 	private String phoneNo;
 	private String telNo;
 	private String email;
+	private String createUser;
+	private String createTime;
+	private String cancelReason;
+	private String invoiceId;
+	private String updateTime;
 	private String arrivalDate;
+	
+	public OrderManageEntity(String orederNo, String productNo,String supplierNo){
+		super();
+		this.orederNo = orederNo;
+		this.productNo = productNo;
+		this.supplierNo = supplierNo;
+	}
 	
 	public OrderManageEntity(){
 		super();
 	}
 	
+	public OrderManageEntity(String orederNo, String productNo,
+			String productName, String approver, String orderDay,
+			String supplierNo, String supplierName, String supplierUser,
+			String unitPrice, BigDecimal taxRate, BigDecimal amount,
+			String number, String holdNumber, BigDecimal taxAmount,
+			BigDecimal totalSum, String status, String orderRemarks,
+			String shippingInfo, String address, String name, String phoneNo,
+			String telNo, String email, String createUser, String createTime,
+			String invoiceId, String arrivalDate) {
+		super();
+		this.orederNo = orederNo;
+		this.productNo = productNo;
+		this.productName = productName;
+		this.approver = approver;
+		this.orderDay = orderDay;
+		this.supplierNo = supplierNo;
+		this.supplierName = supplierName;
+		this.supplierUser = supplierUser;
+		this.unitPrice = unitPrice;
+		this.taxRate = taxRate;
+		this.amount = amount;
+		this.number = number;
+		this.holdNumber = holdNumber;
+		this.taxAmount = taxAmount;
+		this.totalSum = totalSum;
+		this.status = status;
+		this.orderRemarks = orderRemarks;
+		this.shippingInfo = shippingInfo;
+		this.address = address;
+		this.name = name;
+		this.phoneNo = phoneNo;
+		this.telNo = telNo;
+		this.email = email;
+		this.createUser = createUser;
+		this.createTime = createTime;
+		this.invoiceId = invoiceId;
+		this.arrivalDate = arrivalDate;
+	}
+
+
+
+	public OrderManageEntity(String orederNo, String productNo,
+			String approver, String orderDay, String supplierNo,String supplierName, String status,
+			String orderRemarks, String shippingInfo, String createUser) {
+		super();
+		this.orederNo = orederNo;
+		this.productNo = productNo;
+		this.approver = approver;
+		this.orderDay = orderDay;
+		this.supplierNo = supplierNo;
+		this.supplierName = supplierName;
+		this.status = status;
+		this.orderRemarks = orderRemarks;
+		this.shippingInfo = shippingInfo;
+		this.createUser = createUser;
+	}
+
+
 	public OrderManageEntity(String orederNo, String productNo,
 			String approver, String orderDay, String supplierNo,
 			String unitPrice, BigDecimal amount, BigDecimal taxRate, BigDecimal taxAmount,
@@ -74,6 +144,39 @@ public class OrderManageEntity {
 	public void setProductNo(String productNo) {
 		this.productNo = productNo;
 	}
+	
+	public String getProductName() {
+		return productName;
+	}
+
+	public void setProductName(String productName) {
+		this.productName = productName;
+	}
+
+	public String getSupplierUser() {
+		return supplierUser;
+	}
+
+	public void setSupplierUser(String supplierUser) {
+		this.supplierUser = supplierUser;
+	}
+
+	public String getNumber() {
+		return number;
+	}
+
+	public void setNumber(String number) {
+		this.number = number;
+	}
+
+	public String getHoldNumber() {
+		return holdNumber;
+	}
+
+	public void setHoldNumber(String holdNumber) {
+		this.holdNumber = holdNumber;
+	}
+
 	public String getApprover() {
 		return approver;
 	}
@@ -232,6 +335,18 @@ public class OrderManageEntity {
 	public void setArrivalDate(String arrivalDate) {
 		this.arrivalDate = arrivalDate;
 	}
+
+	public String getSupplierName() {
+		return supplierName;
+	}
+
+
+
+	public void setSupplierName(String supplierName) {
+		this.supplierName = supplierName;
+	}
+
+
 
 	@Override
 	public String toString() {

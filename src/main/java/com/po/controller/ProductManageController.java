@@ -51,12 +51,12 @@ public class ProductManageController {
 			String unitPrice = request.getParameter("unitPrice"); //单价
 			String taxRate = request.getParameter("taxRate"); //税率
 			String remarks = request.getParameter("remarks"); //产品备注
-			String arrivalDate = request.getParameter("arrivalDate"); //到货日期
+//			String arrivalDate = request.getParameter("arrivalDate"); //到货日期
 //			String createUser = request.getParameter(session.getAttribute("currentUser").toString());
 			
 			ProductManageEntity entity = new ProductManageEntity(modelNo,
 					productNo, productName, productDecribe, qualityStandard,
-					unitPrice, taxRate, remarks, null,arrivalDate);
+					unitPrice, taxRate, remarks, null);
 			
 			productManageMapper.insert(entity);
 			
@@ -85,11 +85,11 @@ public class ProductManageController {
 			String unitPrice = request.getParameter("unitPrice"); //单价
 			String taxRate = request.getParameter("taxRate"); //税率
 			String remarks = request.getParameter("remarks"); //产品备注
-			String arrivalDate = request.getParameter("arrivalDate"); //到货日期
+//			String arrivalDate = request.getParameter("arrivalDate"); //到货日期
 			
 			ProductManageEntity entity = new ProductManageEntity(modelNo,
 					productNo, productName, productDecribe, qualityStandard,
-					unitPrice, taxRate, remarks ,arrivalDate);
+					unitPrice, taxRate, remarks);
 			
 			productManageMapper.update(entity);
 			

@@ -2,6 +2,7 @@ package main.java.com.po.controller;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -9,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import main.java.com.po.dao.OrderManageMapper;
+import main.java.com.po.dao.ProductManageMapper;
 import main.java.com.po.entity.OrderManageEntity;
 import main.java.com.po.entity.SearchEntity;
 import main.java.com.po.service.OrderManageService;
@@ -19,9 +21,13 @@ import main.java.com.utils.StringFunctionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 
 
 /**
@@ -44,6 +50,12 @@ public class OrderManageController {
 	@Autowired
 	private OrderManageService orderManageService;
 	
+	@Autowired
+	private ProductManageMapper productManageMapper;
+	
+	@Value("${jx.invoiceId}")
+	private String invoiceId;
+	
 	
 	/**
 	 * 新建订单（注意：一个订单可能有多个产品）
@@ -53,27 +65,74 @@ public class OrderManageController {
 	@RequestMapping(value="/save", method = RequestMethod.POST)
 	public ReMessage save(HttpServletRequest request){
 		
+		Map<String, String> orderMap = new HashMap<String, String>();
 		try {
-			String orderNo = request.getParameter("orderNo"); //订单号
-			String productNo = request.getParameter("productNo"); //产品编号
-			String approver = request.getParameter("approver"); //批准人
-			String orderDay = request.getParameter("orderDay"); //订单日期
-			String supplierNo = request.getParameter("supplierNo"); //供应商编号
-			String unitPrice = request.getParameter("unitPrice"); //单价(不含税)
-			BigDecimal amount = new BigDecimal(request.getParameter("amount") == null ? null : request.getParameter("amount")); //金额
-			BigDecimal taxRate = new BigDecimal(request.getParameter("taxRate") == null ? null :request.getParameter("taxRate")); //税率
-			BigDecimal taxAmount = new BigDecimal(request.getParameter("taxAmount") == null ? null : request.getParameter("taxAmount")); //税额
-			BigDecimal totalSum = new BigDecimal(request.getParameter("totalSum") == null ? null:request.getParameter("totalSum")); //价税总额
-			String status = "1";
-			String orderRemarks = request.getParameter("orderRemarks"); //订单备注
-			String shippingInfo = request.getParameter("shippingInfo"); //送货须知
-//			String createUser = session.getAttribute("currentUser").toString(); //创建人
-			String createUser = null;
 			
-			OrderManageEntity entity = new OrderManageEntity(orderNo,productNo,approver,orderDay,supplierNo,
-					unitPrice,amount,taxRate,taxAmount,totalSum,status,orderRemarks,shippingInfo,createUser);
+			//获取订单信息
+			String obj = request.getParameter("obj"); //供应商编号
+			//获取订单中产品信息
+			String productList = request.getParameter("list");
+			
+			//解析参数
+			JSONObject jsonObject =JSONObject.parseObject(obj);
+			Iterator iter = jsonObject.entrySet().iterator();
+			while (iter.hasNext()) {
+				Map.Entry entry = (Map.Entry) iter.next();
+				orderMap.put(entry.getKey().toString(), entry.getValue().toString());
+			}
+			
+			String orderNo = orderMap.get("orederNo");//订单号
+			String approver = orderMap.get("approver"); //审批人
+			String orderDay = orderMap.get("orederDay");//订单日期
+			String supplierNo = orderMap.get("supplierNo"); //供应编号
+			String supplierName = orderMap.get("supplierName"); //供应商名称
+			String supplierUser = orderMap.get("supplierUser"); //供应商联系人
+			String orderRemarks = orderMap.get("orederRemarks"); //订单备注
+			String status = "1";
+			String createUser = null;
+			String createTime = StringFunctionUtil.getNowTime();
+			String name =  orderMap.get("name"); //收货人姓名
+			String address =  orderMap.get("address"); //收货人地址
+			String phoneNo =  orderMap.get("phoneNo"); //收获人手机
+			String telNo =  orderMap.get("telNo"); //收货人座机
+			String email =  orderMap.get("email"); //收货人邮箱
+			
+			String productNo = "",productName = "",unitPrice = "",number = "",holdNumber = "",arrivalDate="";
+			BigDecimal taxRate = new BigDecimal("0.00");
+			BigDecimal amount = new BigDecimal("0.00");
+			BigDecimal taxAmount = new BigDecimal("0.00");
+			BigDecimal totalSum = new BigDecimal("0.00");
+			
+			Map<String,String> productMap = new HashMap<String, String>();
 
-			orderManageMapper.insert(entity);
+			JSONArray array = JSONArray.parseArray(productList);
+			for(int i = 0,length = array.size(); i <length; i++){
+				JSONObject oject = (JSONObject) array.get(i);
+				Iterator productIter = oject.entrySet().iterator();
+				while (productIter.hasNext()) {
+					Map.Entry entry = (Map.Entry) productIter.next();
+					
+					productMap.put(entry.getKey().toString(), entry.getValue().toString());
+
+					productNo = productMap.get("productNo"); //产品编号
+					productName = productMap.get("productName"); //产品名称
+					unitPrice = productMap.get("unitPrice");//单价
+					number = productMap.get("number"); //起订数量数量
+//					taxRate = new BigDecimal(productMap.get("taxRate")); //税率
+//					amount = new BigDecimal(productMap.get("amount")); //金额 = 单价 * 起订数量
+//					taxAmount =new BigDecimal( productMap.get("taxAmount")); //税额 = 金额*税率
+//					totalSum = new BigDecimal(productMap.get("totalSum")); //价税总额 = 金额+税额
+					holdNumber = productMap.get("holdNumber");//到货数量
+					arrivalDate = productMap.get("arrivalDate"); //到货日期
+				}	
+
+				OrderManageEntity entity = new OrderManageEntity(orderNo,productNo,productName,approver,orderDay,supplierNo,supplierName,supplierUser,
+						unitPrice,taxRate,amount,number,holdNumber,taxAmount,totalSum,status,orderRemarks,null,address,name,phoneNo,telNo,email,
+						createUser,createTime,invoiceId,arrivalDate);
+
+				orderManageMapper.insert(entity);
+				
+			}
 			
 			return ReMessage.ok("创建成功");
 		} catch(Exception e){
@@ -83,34 +142,83 @@ public class OrderManageController {
 	}
 	
 	/**
-	 * 修改订单、关闭订单
+	 * 修改订单
 	 * @param request
 	 * @return
 	 */
 	@RequestMapping(value="/modify", method = RequestMethod.POST)
 	public ReMessage modify(HttpServletRequest request){
+		
+		Map<String, String> orderMap = new HashMap<String, String>();
 		try {
-			String orderNo = request.getParameter("orderNo"); //订单号
-			String productNo = request.getParameter("productNo"); //产品编号
-			String approver = request.getParameter("approver"); //批准人
-			String orderDay = request.getParameter("orderDay"); //订单日期
-			String supplierNo = request.getParameter("supplierNo"); //供应商编号
-			BigDecimal amount = new BigDecimal(request.getParameter("amount")); //金额
-			BigDecimal taxRate = new BigDecimal(request.getParameter("taxRate")); //税率
-			BigDecimal taxAmount = new BigDecimal(request.getParameter("taxAmount")); //税额
-			BigDecimal totalSum = new BigDecimal(request.getParameter("totalSum")); //价税总额
-			String unitPrice = request.getParameter("unitPrice"); //单价(不含税)
-			String status = null; //订单状态1正常0未到货未逾期2数量不足未逾期3逾期订单
-			String orderRemarks = request.getParameter("orderRemarks"); //订单备注
-			String shippingInfo = request.getParameter("shippingInfo"); //送货须知
-//			String createUser = session.getAttribute("currentUser").toString(); //创建人
-			
-			OrderManageEntity entity = new OrderManageEntity(orderNo,productNo,approver,orderDay,supplierNo,
-					unitPrice,amount,taxRate,taxAmount,totalSum,status,orderRemarks,shippingInfo,null);
 
-			orderManageMapper.update(entity);
-			return ReMessage.ok("保存成功");
+			//获取订单信息
+			String obj = request.getParameter("obj"); //供应商编号
+			//获取订单中产品信息
+			String productList = request.getParameter("list");
 			
+			//解析参数
+			JSONObject jsonObject =JSONObject.parseObject(obj);
+			Iterator iter = jsonObject.entrySet().iterator();
+			while (iter.hasNext()) {
+				Map.Entry entry = (Map.Entry) iter.next();
+				orderMap.put(entry.getKey().toString(), entry.getValue().toString());
+			}
+			
+			String orderNo = orderMap.get("orederNo");//订单号
+			String approver = orderMap.get("approver"); //审批人
+			String orderDay = orderMap.get("orederDay");//订单日期
+			String supplierNo = orderMap.get("supplierNo"); //供应编号
+			String supplierName = orderMap.get("supplierName"); //供应商名称
+			String supplierUser = orderMap.get("supplierUser"); //供应商联系人
+			String orderRemarks = orderMap.get("orederRemarks"); //订单备注
+			String status = "1";
+			String createUser = null;
+			String createTime = StringFunctionUtil.getNowTime();
+			String name =  orderMap.get("name"); //收货人姓名
+			String address =  orderMap.get("address"); //收货人地址
+			String phoneNo =  orderMap.get("phoneNo"); //收获人手机
+			String telNo =  orderMap.get("telNo"); //收货人座机
+			String email =  orderMap.get("email"); //收货人邮箱
+			
+			String productNo = "",productName = "",unitPrice = "",number = "",holdNumber = "",arrivalDate="";
+			BigDecimal taxRate = new BigDecimal("0.00");
+			BigDecimal amount = new BigDecimal("0.00");
+			BigDecimal taxAmount = new BigDecimal("0.00");
+			BigDecimal totalSum = new BigDecimal("0.00");
+			
+			Map<String,String> productMap = new HashMap<String, String>();
+
+			JSONArray array = JSONArray.parseArray(productList);
+			for(int i = 0,length = array.size(); i <length; i++){
+				JSONObject oject = (JSONObject) array.get(i);
+				Iterator productIter = oject.entrySet().iterator();
+				while (productIter.hasNext()) {
+					Map.Entry entry = (Map.Entry) productIter.next();
+					
+					productMap.put(entry.getKey().toString(), entry.getValue().toString());
+
+					productNo = productMap.get("productNo"); //产品编号
+					productName = productMap.get("productName"); //产品名称
+					unitPrice = productMap.get("unitPrice");//单价
+					number = productMap.get("number"); //起订数量数量
+//					taxRate = new BigDecimal(productMap.get("taxRate")); //税率
+//					amount = new BigDecimal(productMap.get("amount")); //金额 = 单价 * 起订数量
+//					taxAmount =new BigDecimal( productMap.get("taxAmount")); //税额 = 金额*税率
+//					totalSum = new BigDecimal(productMap.get("totalSum")); //价税总额 = 金额+税额
+					holdNumber = productMap.get("holdNumber");//到货数量
+					arrivalDate = productMap.get("arrivalDate"); //到货日期
+				}	
+
+				OrderManageEntity entity = new OrderManageEntity(orderNo,productNo,productName,approver,orderDay,supplierNo,supplierName,supplierUser,
+						unitPrice,taxRate,amount,number,holdNumber,taxAmount,totalSum,status,orderRemarks,null,address,name,phoneNo,telNo,email,
+						createUser,createTime,invoiceId,arrivalDate);
+
+				orderManageMapper.update(entity);
+			}
+			
+			return ReMessage.ok("创建成功");
+		
 		} catch(Exception e){
 			logger.error("保存订单信息异常：" + e.getMessage());
 			return ReMessage.error(500, "保存订单信息异常：" + e.getMessage());
@@ -157,8 +265,8 @@ public class OrderManageController {
 			map.put("offset", (page - 1) * limit);
 			map.put("limit", limit);
 			
-			List<OrderManageEntity> orderDatas = orderManageMapper.queryObject(map);
-			int total = orderManageMapper.queryTotal();
+			List<OrderManageEntity> orderDatas = orderManageMapper.queryObjectNew(map);
+			int total = orderManageMapper.queryTotalNew();
 			PageUtils pageUtil = new PageUtils(orderDatas, total, limit, page);
 			
 			return ReMessage.ok().put("page", pageUtil);

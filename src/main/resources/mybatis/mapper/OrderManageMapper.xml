@@ -37,7 +37,7 @@
     <sql id="Base_Column_List" >
 		id,order_no,product_no,product_name,approver,order_day,supplier_no,supplier_name,supplier_user,
 		unit_price,tax_rate,amount,tax_amount,total_sum,status,order_remarks,shipping_info,address,name,
-		phone_no,tel_no,email,create_user,create_time,update_time,cancel_reason,invoice_id,arrival_date
+		phone_no,tel_no,email,create_user,create_time,update_time,cancel_reason,invoice_id,arrival_date,number,hold_number
     </sql>
 
 	<!-- 查询订单列表 -->
@@ -140,6 +140,17 @@
 			<if test="cancelReason != null">cancel_reason = #{cancelReason}</if>
 		</set>
 		where order_no = #{orederNo,jdbcType=VARCHAR}
+    </update>
+    
+      <update id="updateStatus" parameterType="main.java.com.po.entity.OrderManageEntity" >
+      	update order_manager 
+		<set> 
+			<if test="status != null">status = #{status}, </if>
+			<if test="updateTime != null">update_time = #{updateTime}</if>
+		</set>
+		where order_no = #{orederNo,jdbcType=VARCHAR} 
+		and product_no =#{productNo,jdbcType=VARCHAR}
+		and supplier_no = #{supplierNo,jdbcType=VARCHAR}
     </update>
     
     <delete id="delete" parameterType="java.lang.String" >

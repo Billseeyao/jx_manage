@@ -39,6 +39,8 @@ public interface OrderManageMapper {
 	 */
 	void update(OrderManageEntity entity);
 	
+	void updateStatus(OrderManageEntity entity);
+	
 	/**
 	 * 删除订单
 	 * @param invoiceId

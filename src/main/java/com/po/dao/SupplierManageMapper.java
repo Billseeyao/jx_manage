@@ -47,8 +47,8 @@ public interface SupplierManageMapper {
 	
 	/**
 	 * 删除供应商信息
-	 * @param manageNo
+	 * @param id
 	 */
-	void delete(String manageNo);
+	void delete(String id);
 	
 }

@@ -42,6 +42,11 @@ public class OrderManageEntity {
 		this.supplierNo = supplierNo;
 	}
 	
+	public OrderManageEntity(String orederNo){
+		super();
+		this.orederNo = orederNo;
+	}
+	
 	public OrderManageEntity(){
 		super();
 	}

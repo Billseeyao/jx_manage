@@ -74,7 +74,7 @@ public class UserController {
 	public ReMessage userAdd(HttpServletRequest request){
 		UserEntity user = new UserEntity();
 		try {
-			String name = request.getParameter("userName");
+			String name = request.getParameter("name");
 			user.setName(name);
 //			String pwd = request.getParameter("passWord");
 			user.setPassWord(MD5Util.string2MD5(passWord)); //md5加密
@@ -110,7 +110,7 @@ public class UserController {
 		UserEntity user = new UserEntity();
 		try {
 			user.setId(Long.parseLong(request.getParameter("id"))); //前端传过来的
-			user.setName(request.getParameter("userName"));
+			user.setName(request.getParameter("name"));
 
 			String pwd = request.getParameter("passWord");
 			if(pwd != null){

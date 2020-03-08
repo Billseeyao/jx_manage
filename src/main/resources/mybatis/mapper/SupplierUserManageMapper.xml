@@ -40,6 +40,12 @@
 	   FROM supplier_user_manage where id = #{id,jdbcType=VARCHAR}
     </select>
     
+    <select id="querySupplierUserInfoByNo" resultMap="BaseResultMap" parameterType="java.lang.String" >
+       SELECT 
+       <include refid="Base_Column_List" />
+	   FROM supplier_user_manage where manage_no = #{manageNo,jdbcType=VARCHAR}
+    </select>
+    
     <!-- 预览查询联系人信息 -->
     <select id="previewSupplierUserInfo" resultMap="BaseResultMap" parameterType="main.java.com.po.entity.SupplierUserManageEntity" >
        SELECT 

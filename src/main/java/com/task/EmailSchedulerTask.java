@@ -49,107 +49,21 @@ public class EmailSchedulerTask {
 	@Scheduled(cron="* * 5 * * ?")
 	private void process(){
 		
-		List<ExcelData> excelDatas = new ArrayList<ExcelData>();
-//		List<String> excelLine = null;
-		List<OrderManageEntity> abnomalDatas = orderManageMapper.queryAbnomal(null); //查询异常订单
-		for(OrderManageEntity dataEntity : abnomalDatas){
-			String orderNo = dataEntity.getOrederNo();
-			String productNo = dataEntity.getProductNo();
-			String email = dataEntity.getEmail();
-			
-			String[] num = productNo.split(",");
-			for(int i = 0 ,len = num.length; i < len; i++){
-//				excelLine = new ArrayList<String>();
-				
-				ProductManageEntity productEntity = productManageMapper.queryProductInfo(num[i]);
-//				excelLine.add(orderNo); //订单号
-//				excelLine.add();//产品名称
-//				excelLine.add(); //产品描述
-				
-				int number = Integer.parseInt(productEntity.getNumber()); //订单数量
-				int holdNumber = Integer.parseInt(productEntity.getHoldNumber()); //已到数量
-				int surplusNum = number - holdNumber;	
-				String arrivalDate = productEntity.getArrivalDate(); //到货日期
-				
-//				excelLine.add(String.valueOf(number));
-//				excelLine.add(String.valueOf(surplusNum)); //未到货数量
-//				excelLine.add(arrivalDate); 
-//				excelLine.add(getProductOrderStatus(surplusNum, arrivalDate));//订单状态
-//				excelLine.add(productEntity.getRemarks());//产品备注
-				
-				ExcelData excelData = new ExcelData(orderNo, productEntity.getProductName(),
-						productEntity.getProductDecribe(), String.valueOf(number),String.valueOf(surplusNum), arrivalDate, 
-						getProductOrderStatus(surplusNum, arrivalDate), productEntity.getRemarks(),email);
-				
-				//获得excel数据
-				excelDatas.add(excelData);
-			}
-		}
+		List<EmailAppendixExcelEntity> excelData3 = new ArrayList<EmailAppendixExcelEntity>();
 		
-		Set<String> set = new HashSet<String>(); 
-		for(int i =0 ,len = excelDatas.size(); i < len; i++){
-//			logger.info(">>>>>>"+ excelDatas.get(i).getOrderNo() +"||"+excelDatas.get(i).getProductName()+"||" + "<<<<<<<<" + excelDatas.get(i).getEmail());
-			set.add(excelDatas.get(i).getEmail());
-		}
-		logger.info(">>>>>>>>>>" + set);
-		
-		//获取异常订单中供应商联系人邮箱
-		OrderManageEntity entity = new OrderManageEntity();
-		for(String email : set){
-			List<ExcelData> excelData2 = new ArrayList<ExcelData>();
-			List<EmailAppendixExcelEntity> excelData3 = new ArrayList<EmailAppendixExcelEntity>();
-			entity.setEmail(email);
-			List<OrderManageEntity> excelOrders = orderManageMapper.queryAbnomal(entity);
-			
-			for(OrderManageEntity orderEntity : excelOrders){
-				String excelOrderNo = orderEntity.getOrederNo();
-				String productNo = orderEntity.getProductNo();
-				
-				String[] num = productNo.split(",");
-				for(int i = 0 ,len = num.length; i < len; i++){
-//					excelLine = new ArrayList<String>();
-					
-					ProductManageEntity productEntity = productManageMapper.queryProductInfo(num[i]);
-					
-					int number = Integer.parseInt(productEntity.getNumber()); //订单数量
-					int holdNumber = Integer.parseInt(productEntity.getHoldNumber()); //已到数量
-					int surplusNum = number - holdNumber;	
-					String arrivalDate = productEntity.getArrivalDate(); //到货日期
-					
-					ExcelData excelData = new ExcelData(excelOrderNo, productEntity.getProductName(),
-							productEntity.getProductDecribe(), String.valueOf(number),String.valueOf(surplusNum), arrivalDate, 
-							getProductOrderStatus(surplusNum, arrivalDate), productEntity.getRemarks(),email);
-					
-					//获得excel数据
-					excelData2.add(excelData);
-					
-					EmailAppendixExcelEntity excelEntity = new EmailAppendixExcelEntity(excelOrderNo,productEntity.getProductName(),
-							productEntity.getProductDecribe(), String.valueOf(number),String.valueOf(surplusNum), arrivalDate, 
-							getProductOrderStatus(surplusNum, arrivalDate), productEntity.getRemarks());
-					excelData3.add(excelEntity);
-				}
-			}
-			
-			for(int i =0 ,len = excelData2.size(); i < len; i++){
-				logger.info(">>>>>>"+ excelData2.get(i).getOrderNo() +"||"+excelData2.get(i).getProductName()+"||" + "<<<<<<<<" + excelData2.get(i).getEmail());
-			}
-			
-			//生成excel
-			String filePath = "D:/"+email+".xls";
-			String path = ExcelUtil.createExcel(EmailAppendixExcelEntity.class, excelData3, null, "订单", filePath);
-			
-			//发送邮件
-			List<String> co = new ArrayList<String>();
-			co.add(email);
-			mailService.sendAttachmentMail("加鑫订购单提醒", "附件清单仅供核对，订单状态与到货情况如与实际情况相符，该邮件无需回复。有任何问题，请及时跟采购人员沟通。上海加鑫净化设备有限公司", 
-					path, email+".xls", co, email);
-			
-		
-		}		
-				
+		orderManageMapper.queryAbnomal(entity)
 		
 		
-    }
+		//生成excel
+		String filePath = "D:/"+email+".xls";
+		String path = ExcelUtil.createExcel(EmailAppendixExcelEntity.class, excelData3, null, "订单", filePath);
+		
+		//发送邮件
+		List<String> co = new ArrayList<String>();
+		co.add(email);
+		mailService.sendAttachmentMail("加鑫订购单提醒", "附件清单仅供核对，订单状态与到货情况如与实际情况相符，该邮件无需回复。有任何问题，请及时跟采购人员沟通。上海加鑫净化设备有限公司", 
+				path, email+".xls", co, email);
+	}
 	
 	@Autowired
 	private MailService mailService;
@@ -180,7 +94,110 @@ public class EmailSchedulerTask {
 	
 	
 	
-	
+//	public void aa(){
+//
+//		
+//		List<ExcelData> excelDatas = new ArrayList<ExcelData>();
+////		List<String> excelLine = null;
+//		List<OrderManageEntity> abnomalDatas = orderManageMapper.queryAbnomal(null); //查询异常订单
+//		for(OrderManageEntity dataEntity : abnomalDatas){
+//			String orderNo = dataEntity.getOrederNo();
+//			String productNo = dataEntity.getProductNo();
+//			String email = dataEntity.getEmail();
+//			
+//			String[] num = productNo.split(",");
+//			for(int i = 0 ,len = num.length; i < len; i++){
+////				excelLine = new ArrayList<String>();
+//				
+//				ProductManageEntity productEntity = productManageMapper.queryProductInfo(num[i]);
+////				excelLine.add(orderNo); //订单号
+////				excelLine.add();//产品名称
+////				excelLine.add(); //产品描述
+//				
+////				int number = Integer.parseInt(productEntity.getNumber()); //订单数量
+////				int holdNumber = Integer.parseInt(productEntity.getHoldNumber()); //已到数量
+//				int surplusNum = number - holdNumber;	
+//				String arrivalDate = productEntity.getArrivalDate(); //到货日期
+//				
+////				excelLine.add(String.valueOf(number));
+////				excelLine.add(String.valueOf(surplusNum)); //未到货数量
+////				excelLine.add(arrivalDate); 
+////				excelLine.add(getProductOrderStatus(surplusNum, arrivalDate));//订单状态
+////				excelLine.add(productEntity.getRemarks());//产品备注
+//				
+//				ExcelData excelData = new ExcelData(orderNo, productEntity.getProductName(),
+//						productEntity.getProductDecribe(), String.valueOf(number),String.valueOf(surplusNum), arrivalDate, 
+//						getProductOrderStatus(surplusNum, arrivalDate), productEntity.getRemarks(),email);
+//				
+//				//获得excel数据
+//				excelDatas.add(excelData);
+//			}
+//		}
+//		
+//		Set<String> set = new HashSet<String>(); 
+//		for(int i =0 ,len = excelDatas.size(); i < len; i++){
+////			logger.info(">>>>>>"+ excelDatas.get(i).getOrderNo() +"||"+excelDatas.get(i).getProductName()+"||" + "<<<<<<<<" + excelDatas.get(i).getEmail());
+//			set.add(excelDatas.get(i).getEmail());
+//		}
+//		logger.info(">>>>>>>>>>" + set);
+//		
+//		//获取异常订单中供应商联系人邮箱
+//		OrderManageEntity entity = new OrderManageEntity();
+//		for(String email : set){
+//			List<ExcelData> excelData2 = new ArrayList<ExcelData>();
+//			List<EmailAppendixExcelEntity> excelData3 = new ArrayList<EmailAppendixExcelEntity>();
+//			entity.setEmail(email);
+//			List<OrderManageEntity> excelOrders = orderManageMapper.queryAbnomal(entity);
+//			
+//			for(OrderManageEntity orderEntity : excelOrders){
+//				String excelOrderNo = orderEntity.getOrederNo();
+//				String productNo = orderEntity.getProductNo();
+//				
+//				String[] num = productNo.split(",");
+//				for(int i = 0 ,len = num.length; i < len; i++){
+////					excelLine = new ArrayList<String>();
+//					
+//					ProductManageEntity productEntity = productManageMapper.queryProductInfo(num[i]);
+//					
+//					int number = Integer.parseInt(productEntity.getNumber()); //订单数量
+//					int holdNumber = Integer.parseInt(productEntity.getHoldNumber()); //已到数量
+//					int surplusNum = number - holdNumber;	
+//					String arrivalDate = productEntity.getArrivalDate(); //到货日期
+//					
+//					ExcelData excelData = new ExcelData(excelOrderNo, productEntity.getProductName(),
+//							productEntity.getProductDecribe(), String.valueOf(number),String.valueOf(surplusNum), arrivalDate, 
+//							getProductOrderStatus(surplusNum, arrivalDate), productEntity.getRemarks(),email);
+//					
+//					//获得excel数据
+//					excelData2.add(excelData);
+//					
+//					EmailAppendixExcelEntity excelEntity = new EmailAppendixExcelEntity(excelOrderNo,productEntity.getProductName(),
+//							productEntity.getProductDecribe(), String.valueOf(number),String.valueOf(surplusNum), arrivalDate, 
+//							getProductOrderStatus(surplusNum, arrivalDate), productEntity.getRemarks());
+//					excelData3.add(excelEntity);
+//				}
+//			}
+//			
+//			for(int i =0 ,len = excelData2.size(); i < len; i++){
+//				logger.info(">>>>>>"+ excelData2.get(i).getOrderNo() +"||"+excelData2.get(i).getProductName()+"||" + "<<<<<<<<" + excelData2.get(i).getEmail());
+//			}
+//			
+//			//生成excel
+//			String filePath = "D:/"+email+".xls";
+//			String path = ExcelUtil.createExcel(EmailAppendixExcelEntity.class, excelData3, null, "订单", filePath);
+//			
+//			//发送邮件
+//			List<String> co = new ArrayList<String>();
+//			co.add(email);
+//			mailService.sendAttachmentMail("加鑫订购单提醒", "附件清单仅供核对，订单状态与到货情况如与实际情况相符，该邮件无需回复。有任何问题，请及时跟采购人员沟通。上海加鑫净化设备有限公司", 
+//					path, email+".xls", co, email);
+//			
+//		
+//		}		
+//				
+//		
+//    
+//	}
 	
 	
 	

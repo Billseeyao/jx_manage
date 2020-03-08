@@ -50,8 +50,9 @@
 			limit #{offset}, #{limit}
 	   </if>
     </select>
+    
     <select id="queryTotalNew" resultType="int">
-		select count(*) from order_manager where status <![CDATA[ <> ]]> '0'  GROUP BY order_no
+		select count(*) from (select * from order_manager where status <![CDATA[ <> ]]> '0'  GROUP BY order_no) t
 	</select>
     
 	<!-- 查询订单列表 -->
@@ -95,8 +96,10 @@
        SELECT 
        <include refid="Base_Column_List" />
 	   FROM order_manager 
-	   where order_no = #{orederNo,jdbcType=VARCHAR} and product_no =#{productNo,jdbcType=VARCHAR}
-	   and supplier_no = #{supplierNo}
+	   where 1 = 1
+	   <if test="orederNo != null"> and order_no = #{orederNo}</if>
+	   <if test="productNo != null"> and product_no = #{productNo}</if>
+	   <if test="supplierNo != null"> and supplier_no = #{supplierNo}</if> 
     </select> 
 
 	<!-- 创建订单 -->
@@ -171,7 +174,7 @@
 	   select order_no,product_no,order_remarks,supplier_no,supplier_name,s.email as email 
 	   from order_manager o LEFT JOIN supplier_user_manage s 
 	   on o.supplier_no = s.manage_no and o.supplier_name = s.user_name 
-	   where status = '2'
+	   where status in ('2','3')
 	   <if test="email != null"> and s.email = #{email}</if>
     </select>
    

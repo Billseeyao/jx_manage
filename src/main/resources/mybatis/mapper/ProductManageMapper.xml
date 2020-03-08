@@ -56,6 +56,7 @@
       	update product_manage 
 		<set> 
 			<if test="modelNo != null">model_no = #{modelNo}, </if>
+			<if test="productNo != null">product_no = #{productNo}, </if>
 			<if test="productName != null">product_name = #{productName}, </if>
 			<if test="productDecribe != null">product_decribe = #{productDecribe}, </if>
 			<if test="qualityStandard != null">quality_standard = #{qualityStandard}, </if>
@@ -66,11 +67,11 @@
 			<if test="createUser != null">create_user = #{createUser}, </if>
 			<if test="remarks != null">remarks = #{remarks}</if>
 		</set>
-		where product_no = #{productNo,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=VARCHAR}
     </update>
     
     <delete id="delete" parameterType="java.lang.String" >
-		delete from product_manage where product_no = #{productNo,jdbcType=VARCHAR}
+		delete from product_manage where id = #{id,jdbcType=VARCHAR}
     </delete>
     
 </mapper>

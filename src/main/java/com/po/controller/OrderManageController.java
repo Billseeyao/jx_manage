@@ -232,16 +232,16 @@ public class OrderManageController {
 	 * @param supplierNo 供应商编号
 	 * @return status订单状态
 	 */
-	public String getOrderStatus(String productNo,String orderNo,String supplierNo,int holdNumber){
+	public String getOrderStatus(String productNo, String orderNo,String supplierNo, int holdNumber) {
 		String status = "";
-		
-		OrderManageEntity entity = orderManageMapper.proviewDataByNo(new OrderManageEntity(orderNo, productNo, supplierNo));
-		if(!StringFunctionUtil.isEmpty(entity)){
-			int number = Integer.parseInt(entity.getName());
+
+		List<OrderManageEntity> orderDatas = orderManageMapper.proviewDataByNo(new OrderManageEntity(orderNo, productNo,supplierNo));
+		for (OrderManageEntity entity : orderDatas) {
+			int number = Integer.parseInt(entity.getNumber());
 			int surplusNum = number - holdNumber;
-			if(surplusNum == 0){
+			if (surplusNum == 0) {
 				status = "1";
-			}else {
+			} else {
 				status = entity.getStatus();
 			}
 		}

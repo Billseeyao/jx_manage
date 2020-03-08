@@ -190,8 +190,8 @@ public class SupplierManageController {
 	public ReMessage delete(HttpServletRequest request){
 		
 		try {
-			String manageNo = request.getParameter("manageNo"); //供应商编号
-			supplierManageMapper.delete(manageNo);
+			String id = request.getParameter("id"); //编号
+			supplierManageMapper.delete(id);
 			return ReMessage.ok();
 		} catch(Exception e){
 			logger.error("删除供应商信息异常：" + e.getMessage());

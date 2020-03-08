@@ -75,5 +75,5 @@ public interface OrderManageMapper {
 	 * @param entity
 	 * @return
 	 */
-	OrderManageEntity proviewDataByNo(OrderManageEntity entity);
+	List<OrderManageEntity> proviewDataByNo(OrderManageEntity entity);
 }

@@ -29,6 +29,8 @@ public interface SupplierUserManageMapper {
 	 */
 	SupplierUserManageEntity querySupplierUserInfo(String id);
 	
+	List<SupplierUserManageEntity> querySupplierUserInfoByNo(String manageNo);
+	
 	/**
 	 * 保存供应商信息
 	 * @param entity

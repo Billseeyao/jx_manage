@@ -35,6 +35,6 @@ public interface ProductManageMapper {
 	void update(ProductManageEntity entity);
 	
 	
-	void delete(String product);
+	void delete(String id);
 	
 }

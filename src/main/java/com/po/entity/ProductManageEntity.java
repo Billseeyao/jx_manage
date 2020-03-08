@@ -23,6 +23,26 @@ public class ProductManageEntity {
 		super();
 	}
 	
+	
+	
+	public ProductManageEntity(String id, String modelNo, String productNo,
+			String productName, String productDecribe, String qualityStandard,
+			String unitPrice, String taxRate, String remarks, String updateTime) {
+		super();
+		this.id = id;
+		this.modelNo = modelNo;
+		this.productNo = productNo;
+		this.productName = productName;
+		this.productDecribe = productDecribe;
+		this.qualityStandard = qualityStandard;
+		this.unitPrice = unitPrice;
+		this.taxRate = taxRate;
+		this.remarks = remarks;
+		this.updateTime = updateTime;
+	}
+
+
+
 	public ProductManageEntity(String modelNo, String productNo,
 			String productName, String productDecribe, String qualityStandard,
 			String unitPrice, String taxRate, String remarks) {

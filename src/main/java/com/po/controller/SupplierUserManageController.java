@@ -74,18 +74,15 @@ public class SupplierUserManageController {
 	 */
 	@ResponseBody
 	@RequestMapping(value="/query", method = RequestMethod.POST)
-	public ReMessage query(int page, int limit){
+	public ReMessage query(HttpServletRequest request){
 		
 		try {
-			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("offset", (page - 1) * limit);
-			map.put("limit", limit);
+			String manageNo = request.getParameter("manageNo"); // 编号
+			List<SupplierUserManageEntity> orderDatas = supplierUserManageMapper.querySupplierUserInfoByNo(manageNo);
+//			int total = supplierUserManageMapper.queryTotal();
+//			PageUtils pageUtil = new PageUtils(orderDatas, total, 7, 0);
 			
-			List<SupplierUserManageEntity> orderDatas = supplierUserManageMapper.queryObject(map);
-			int total = supplierUserManageMapper.queryTotal();
-			PageUtils pageUtil = new PageUtils(orderDatas, total, limit, page);
-			
-			return ReMessage.ok().put("page", pageUtil);
+			return ReMessage.ok().put("data", orderDatas);
 		} catch (Exception e) {
 			logger.error("查询联系人列表异常：" + e.getMessage());
 			return ReMessage.error(500, "查询联系人列表异常：" + e.getMessage());

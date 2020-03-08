@@ -79,7 +79,7 @@
     </update>
     
 	<delete id="delete" parameterType="java.lang.String" >
-		delete from supplier_manage where manage_no = #{manageNo,jdbcType=VARCHAR}
+		delete from supplier_manage where id = #{id,jdbcType=VARCHAR}
     </delete>
     
 </mapper>

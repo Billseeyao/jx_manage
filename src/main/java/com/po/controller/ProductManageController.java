@@ -11,6 +11,7 @@ import main.java.com.po.dao.ProductManageMapper;
 import main.java.com.po.entity.ProductManageEntity;
 import main.java.com.utils.PageUtils;
 import main.java.com.utils.ReMessage;
+import main.java.com.utils.StringFunctionUtil;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -77,6 +78,7 @@ public class ProductManageController {
 	@RequestMapping(value="/modify", method = RequestMethod.POST)
 	public ReMessage modify(HttpServletRequest request){
 		try {
+			String id = request.getParameter("id");  //产品型号
 			String modelNo = request.getParameter("modelNo");  //产品型号
 			String productNo = request.getParameter("productNo"); //产品编号
 			String productName = request.getParameter("productName"); //产品名称
@@ -86,11 +88,12 @@ public class ProductManageController {
 			String taxRate = request.getParameter("taxRate"); //税率
 			String remarks = request.getParameter("remarks"); //产品备注
 //			String arrivalDate = request.getParameter("arrivalDate"); //到货日期
-			
-			ProductManageEntity entity = new ProductManageEntity(modelNo,
+
+			ProductManageEntity entity = new ProductManageEntity(id, modelNo,
 					productNo, productName, productDecribe, qualityStandard,
-					unitPrice, taxRate, remarks);
-			
+					unitPrice, taxRate, remarks,
+					StringFunctionUtil.getNowTime());
+
 			productManageMapper.update(entity);
 			
 			return ReMessage.ok("保存成功");
@@ -123,8 +126,8 @@ public class ProductManageController {
 	@RequestMapping(value="/delete", method = RequestMethod.POST)
 	public ReMessage delete(HttpServletRequest request){
 		try {
-			String productNo = request.getParameter("productNo");  //产品编号
-			productManageMapper.delete(productNo);
+			String id = request.getParameter("id");  //编号
+			productManageMapper.delete(id);
 			return ReMessage.ok();
 		} catch(Exception e){
 			logger.error("删除产品信息异常：" + e.getMessage());

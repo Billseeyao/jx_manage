@@ -172,7 +172,6 @@ public class OrderManageController {
 			String supplierName = orderMap.get("supplierName"); //供应商名称
 			String supplierUser = orderMap.get("supplierUser"); //供应商联系人
 			String orderRemarks = orderMap.get("orederRemarks"); //订单备注
-			String status = "1";
 			String createUser = null;
 			String createTime = StringFunctionUtil.getNowTime();
 			String name =  orderMap.get("name"); //收货人姓名
@@ -208,8 +207,10 @@ public class OrderManageController {
 //					totalSum = new BigDecimal(productMap.get("totalSum")); //价税总额 = 金额+税额
 					holdNumber = productMap.get("holdNumber");//到货数量
 					arrivalDate = productMap.get("arrivalDate"); //到货日期
-				}	
-
+				}
+				//获取
+				String status = getOrderStatus(productNo,orderNo,supplierNo,Integer.parseInt(holdNumber));
+				
 				OrderManageEntity entity = new OrderManageEntity(orderNo,productNo,productName,approver,orderDay,supplierNo,supplierName,supplierUser,
 						unitPrice,taxRate,amount,number,holdNumber,taxAmount,totalSum,status,orderRemarks,null,address,name,phoneNo,telNo,email,
 						createUser,createTime,invoiceId,arrivalDate);
@@ -223,6 +224,28 @@ public class OrderManageController {
 			logger.error("保存订单信息异常：" + e.getMessage());
 			return ReMessage.error(500, "保存订单信息异常：" + e.getMessage());
 		}
+	}
+	
+	/**
+	 * @param productNo 产品编号
+	 * @param orderNo 订单号
+	 * @param supplierNo 供应商编号
+	 * @return status订单状态
+	 */
+	public String getOrderStatus(String productNo,String orderNo,String supplierNo,int holdNumber){
+		String status = "";
+		
+		OrderManageEntity entity = orderManageMapper.proviewDataByNo(new OrderManageEntity(orderNo, productNo, supplierNo));
+		if(!StringFunctionUtil.isEmpty(entity)){
+			int number = Integer.parseInt(entity.getName());
+			int surplusNum = number - holdNumber;
+			if(surplusNum == 0){
+				status = "1";
+			}else {
+				status = entity.getStatus();
+			}
+		}
+		return status;
 	}
 	
 	/**

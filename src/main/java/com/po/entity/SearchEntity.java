@@ -9,18 +9,18 @@ public class SearchEntity {
 
 	private int offset;
 	private int limit;
-	private String orderNo;
+	private String orederNo;
 	
 	
 	public SearchEntity() {
 		super();
 	}
 	
-	public SearchEntity(int offset, int limit, String orderNo) {
+	public SearchEntity(int offset, int limit, String orederNo) {
 		super();
 		this.offset = offset;
 		this.limit = limit;
-		this.orderNo = orderNo;
+		this.orederNo = orederNo;
 	}
 	
 	public int getOffset() {
@@ -35,11 +35,11 @@ public class SearchEntity {
 	public void setLimit(int limit) {
 		this.limit = limit;
 	}
-	public String getOrderNo() {
-		return orderNo;
+	public String getorederNo() {
+		return orederNo;
 	}
-	public void setOrderNo(String orderNo) {
-		this.orderNo = orderNo;
+	public void setorederNo(String orederNo) {
+		this.orederNo = orederNo;
 	}
 	
 	

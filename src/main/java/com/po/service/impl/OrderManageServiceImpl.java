@@ -112,6 +112,7 @@ public class OrderManageServiceImpl implements OrderManageService{
 				ProductManageEntity entity = productMapper.queryProductInfo(productNo);
 				if (!StringFunctionUtil.isEmpty(entity)) {
 					// map.put("modelNo", entity.getModelNo());
+					map.put("productNo",entity.getProductNo());
 					map.put("productName", entity.getProductName()); // 产品名称
 					map.put("productDecribe", entity.getProductDecribe());// 产品描述
 					// map.put("qualityStandard",

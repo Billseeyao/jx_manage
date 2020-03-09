@@ -83,11 +83,11 @@ public class OrderManageController {
 			
 			String orderNo = orderMap.get("orederNo");//订单号
 			String approver = orderMap.get("approver"); //审批人
-			String orderDay = orderMap.get("orederDay");//订单日期
+			String orderDay = orderMap.get("orderDay");//订单日期
 			String supplierNo = orderMap.get("supplierNo"); //供应编号
 			String supplierName = orderMap.get("supplierName"); //供应商名称
 			String supplierUser = orderMap.get("supplierUser"); //供应商联系人
-			String orderRemarks = orderMap.get("orederRemarks"); //订单备注
+			String orderRemarks = orderMap.get("orderRemarks"); //订单备注
 			String status = "1";
 			String createUser = null;
 			String createTime = StringFunctionUtil.getNowTime();
@@ -113,18 +113,17 @@ public class OrderManageController {
 					Map.Entry entry = (Map.Entry) productIter.next();
 					
 					productMap.put(entry.getKey().toString(), entry.getValue().toString());
-
-					productNo = productMap.get("productNo"); //产品编号
-					productName = productMap.get("productName"); //产品名称
-					unitPrice = productMap.get("unitPrice");//单价
-					number = productMap.get("number"); //起订数量数量
-//					taxRate = new BigDecimal(productMap.get("taxRate")); //税率
-//					amount = new BigDecimal(productMap.get("amount")); //金额 = 单价 * 起订数量
-//					taxAmount =new BigDecimal( productMap.get("taxAmount")); //税额 = 金额*税率
-//					totalSum = new BigDecimal(productMap.get("totalSum")); //价税总额 = 金额+税额
-					holdNumber = productMap.get("holdNumber");//到货数量
-					arrivalDate = productMap.get("arrivalDate"); //到货日期
 				}	
+				productNo = productMap.get("productNo"); // 产品编号
+				productName = productMap.get("productName"); // 产品名称
+				unitPrice = productMap.get("unitPrice");// 单价
+				number = productMap.get("number"); // 起订数量数量
+				taxRate = new BigDecimal(productMap.get("taxRate")); // 税率
+				amount = new BigDecimal(productMap.get("amount")); // 金额 = 单价 * 起订数量
+				taxAmount = new BigDecimal(productMap.get("taxAmount")); // 税额 = 金额*税率
+				totalSum = new BigDecimal(productMap.get("totalSum")); // 价税总额 = 金额+税额
+				holdNumber = productMap.get("holdNumber");// 到货数量
+				arrivalDate = productMap.get("arrivalDate"); //到货日期
 
 				OrderManageEntity entity = new OrderManageEntity(orderNo,productNo,productName,approver,orderDay,supplierNo,supplierName,supplierUser,
 						unitPrice,taxRate,amount,number,holdNumber,taxAmount,totalSum,status,orderRemarks,null,address,name,phoneNo,telNo,email,
@@ -167,11 +166,11 @@ public class OrderManageController {
 			
 			String orderNo = orderMap.get("orederNo");//订单号
 			String approver = orderMap.get("approver"); //审批人
-			String orderDay = orderMap.get("orederDay");//订单日期
+			String orderDay = orderMap.get("orderDay");//订单日期
 			String supplierNo = orderMap.get("supplierNo"); //供应编号
 			String supplierName = orderMap.get("supplierName"); //供应商名称
 			String supplierUser = orderMap.get("supplierUser"); //供应商联系人
-			String orderRemarks = orderMap.get("orederRemarks"); //订单备注
+			String orderRemarks = orderMap.get("orderRemarks"); //订单备注
 			String createUser = null;
 			String createTime = StringFunctionUtil.getNowTime();
 			String name =  orderMap.get("name"); //收货人姓名
@@ -196,18 +195,19 @@ public class OrderManageController {
 					Map.Entry entry = (Map.Entry) productIter.next();
 					
 					productMap.put(entry.getKey().toString(), entry.getValue().toString());
-
-					productNo = productMap.get("productNo"); //产品编号
-					productName = productMap.get("productName"); //产品名称
-					unitPrice = productMap.get("unitPrice");//单价
-					number = productMap.get("number"); //起订数量数量
-//					taxRate = new BigDecimal(productMap.get("taxRate")); //税率
-//					amount = new BigDecimal(productMap.get("amount")); //金额 = 单价 * 起订数量
-//					taxAmount =new BigDecimal( productMap.get("taxAmount")); //税额 = 金额*税率
-//					totalSum = new BigDecimal(productMap.get("totalSum")); //价税总额 = 金额+税额
-					holdNumber = productMap.get("holdNumber");//到货数量
-					arrivalDate = productMap.get("arrivalDate"); //到货日期
 				}
+				
+				productNo = productMap.get("productNo"); //产品编号
+				productName = productMap.get("productName"); //产品名称
+				unitPrice = productMap.get("unitPrice");//单价
+				number = productMap.get("number"); //起订数量数量
+				taxRate = new BigDecimal(productMap.get("taxRate")); //税率
+				amount = new BigDecimal(productMap.get("amount")); //金额 = 单价 * 起订数量
+				taxAmount =new BigDecimal( productMap.get("taxAmount")); //税额 = 金额*税率
+				totalSum = new BigDecimal(productMap.get("totalSum")); //价税总额 = 金额+税额
+				holdNumber = productMap.get("holdNumber");//到货数量
+				arrivalDate = productMap.get("arrivalDate"); //到货日期
+				
 				//获取
 				String status = getOrderStatus(productNo,orderNo,supplierNo,Integer.parseInt(holdNumber));
 				

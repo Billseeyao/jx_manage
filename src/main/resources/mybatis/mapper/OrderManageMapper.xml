@@ -178,11 +178,10 @@
     </select>
 
 	<!-- 查询异常订单 -->
-	<select id="queryAbnomal" resultMap="BaseResultMap"
-		parameterType="main.java.com.po.entity.OrderManageEntity">
-		select
-		<include refid="Base_Column_List" />
-		from order_manager where status in ('2','3');
+	<select id="queryAbnomal" resultMap="BaseResultMap" parameterType="main.java.com.po.entity.OrderManageEntity">
+		select T.order_no,T.product_no,T.product_name,T.number,T.hold_number ,T.arrival_date,T.status,T.order_remarks,T.supplier_no,T.supplier_user,T.email
+			from (select order_no,o.product_no,o.product_name,o.number,o.number - o.hold_number as hold_number,o.arrival_date,status,order_remarks ,o.supplier_no,o.supplier_user,s.email   from order_manager o LEFT JOIN supplier_user_manage s on o.supplier_no = s.manage_no and o.supplier_user = s.user_name and status in ('2','3') ) T 
+		<if test="email != null"> where T.email = #{email,jdbcType=VARCHAR} </if>
 	</select>
    
 </mapper>

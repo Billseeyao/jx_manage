@@ -41,22 +41,39 @@ public class Test {
 	    }
 	  
 	public static void main(String[] args) {
-		HashSet<Object> set = new HashSet<Object>();
-		
-		List<Object> list = new ArrayList<Object>();
-		Map<String,String> map = new HashMap<String, String>();
-		list.add(map.put("HNKNF001", "何老板"));
-//		list.add(map.put("HNKNF001", "李晓明"));
+//		HashSet<Object> set = new HashSet<Object>();
+//		
+//		List<Object> list = new ArrayList<Object>();
+//		Map<String,String> map = new HashMap<String, String>();
 //		list.add(map.put("HNKNF001", "何老板"));
+////		list.add(map.put("HNKNF001", "李晓明"));
+////		list.add(map.put("HNKNF001", "何老板"));
+//		
+//		System.out.println(list);
+//		set.add(list);
+//		System.out.println(set);
+//		
+//		String email = "yiluyao_bill@163.com";
+//		String filePath = "D:/"+email.substring(0, email.length() - 8) +".xls";
+//		System.out.println(filePath);
 		
-		System.out.println(list);
-		set.add(list);
-		System.out.println(set);
+//		HashSet<String> set = new HashSet<String>();
+//		set.add("1111111");
+//		set.add("1111111");
+//		set.add("1111112");
+//		System.out.println(set);
+//		for(String aa : set){
+//			System.out.println(aa);
+//		}
 		
-		String email = "yiluyao_bill@163.com";
-		String filePath = "D:/"+email.substring(0, email.length() - 8) +".xls";
-		System.out.println(filePath);
-
+		List<String> list = new ArrayList<String>();
+		list.add("1");
+		list.add("2");
+		StringBuffer sb = new StringBuffer();
+		for(int i = 0,len = list.size();i <len;i++){
+			sb.append(list.get(i)).append(",");
+		}
+		System.out.println(sb.toString());
 	}
 
 }

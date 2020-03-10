@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="main.java.com.po.dao.EmailSendInfoMapper" >
+    <resultMap id="BaseResultMap" type="main.java.com.po.entity.EmailSendInfoEntity" >
+		<result column="id" property="id" jdbcType="INTEGER"/>
+		<result column="appendix_path" property="appendixPath" jdbcType="VARCHAR"/>
+		<result column="subject" property="subject" jdbcType="VARCHAR"/>
+		<result column="fromEmail" property="fromemail" jdbcType="VARCHAR"/>
+		<result column="ccCopy" property="cccopy" jdbcType="VARCHAR"/>
+		<result column="toEmail" property="toemail" jdbcType="VARCHAR"/>
+		<result column="sendTime" property="sendtime" jdbcType="VARCHAR"/>
+    </resultMap>
+    
+    
+	<sql id="Base_Column_List">
+		id,appendix_path,subject,fromEmail,ccCopy,toEmail,sendTime
+	</sql>
+
+	<insert id="save" parameterType="main.java.com.po.entity.EmailSendInfoEntity">
+		insert into EMAIL_SEND_INFO(appendix_path,subject,fromEmail,ccCopy,toEmail,sendTime) values(#{appendixPath},#{subject},#{fromemail},#{cccopy},#{toemail},#{sendtime})
+	</insert>
+
+    
+</mapper>

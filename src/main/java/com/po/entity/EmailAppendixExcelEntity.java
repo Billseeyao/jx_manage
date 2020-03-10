@@ -5,7 +5,7 @@ import cn.afterturn.easypoi.excel.annotation.Excel;
 public class EmailAppendixExcelEntity {
 	
 	@Excel(name = "订单号", orderNum = "0")
-	private String productNo;
+	private String orderNo;
 	
 	@Excel(name = "产品名称", orderNum = "1")
 	private String productName;
@@ -29,11 +29,11 @@ public class EmailAppendixExcelEntity {
 	private String remark;
 
 	
-	public EmailAppendixExcelEntity(String productNo, String productName,
+	public EmailAppendixExcelEntity(String orderNo, String productName,
 			String productDecribe, String number, String surplusNum,
 			String arrivalDate, String orderStatus, String remark) {
 		super();
-		this.productNo = productNo;
+		this.orderNo = orderNo;
 		this.productName = productName;
 		this.productDecribe = productDecribe;
 		this.number = number;
@@ -43,13 +43,16 @@ public class EmailAppendixExcelEntity {
 		this.remark = remark;
 	}
 
-	public String getProductNo() {
-		return productNo;
+
+	public String getOrderNo() {
+		return orderNo;
 	}
 
-	public void setProductNo(String productNo) {
-		this.productNo = productNo;
+	public void setOrderNo(String orderNo) {
+		this.orderNo = orderNo;
 	}
+
+
 
 	public String getProductName() {
 		return productName;
